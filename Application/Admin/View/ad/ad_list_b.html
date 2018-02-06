@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:03 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>党建天地 - Bootstrap Table</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        
+
+        
+        <!-- End Panel Basic -->
+
+        <!-- Panel Style -->
+        
+        <!-- End Panel Style -->
+
+        <!-- Panel Sort & Hideheader -->
+        
+        <!-- End Panel Sort & Hideheader -->
+
+        <!-- Panel Columns & Select -->
+        
+        <!-- End Panel Columns & Select -->
+
+        <!-- Panel Other -->
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>广告列表</h5>
+               
+            </div>
+            <div class="ibox-content">
+                <div class="row row-lg">
+                    
+
+    
+                    <div class="col-sm-12">
+                        <!-- Example Events -->
+                        <div class="example-wrap">
+                                <div class="btn-group hidden-xs" id="exampleTableEventsToolbar" role="group">
+
+                                    <a class="btn  btn-info" onclick="openmodel('{:U('ad_save')}')">
+                                        <i class="glyphicon glyphicon-plus" aria-hidden="true"></i> 添加内容
+                                    </a>
+                                    
+                                </div>
+                                <!-- <table id="exampleTableEvents" data-height="400" data-mobile-responsive="true">
+                                    <thead>
+                                        <tr>
+                                            <th data-field="state" data-checkbox="true"></th>
+                                            <th data-field="id">ID</th>
+                                            <th data-field="name">名称</th>
+                                            <th data-field="price">价格</th>
+                                        </tr>
+                                       
+                                    </thead>
+                                </table> -->
+
+                        <!-- {:dump($result)} -->
+                        <table class="table table-striped table-bordered table-hover dataTables-example dataTable" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                                <tr role="row">
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:3%;background:white">广告位置</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:3%;background:white">广告类型</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:8%;background:white">广告标题</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:10%;background:white">广告内容</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:7%;background:white">广告图片</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:6%;background:white">开始时间</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:6%;background:white">结束时间</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:3%;background:white">审核状态</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:3%;background:white">排序值</th>
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:3%;background:white">点击量</th>
+
+                                    <th tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-sort="ascending" style="width:4%;background:white">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                             <foreach name="result['List']" item="v">
+                                <tr class="gradeA odd">
+                                    <!-- <td><if condition="isset($v['Photo']) && !empty($v['Photo'])"><a href="{$v.Photo}" target="_blank"><img src="{$v.SmallPhoto}" width="50" height="50"></a></if></td> -->
+                                    <!-- <td>{$v.MienId}</td> -->
+                                    <td>{$result['AdLocation'][$v['PositionCode']]}</td>
+                                    <td>{$result['AdData'][$v['AdType']]}</td>
+                                    <!-- <td>{$v.AdType}</td> -->
+                                    <td>{$v.AdTitle}</td>
+                                    <td>{$v.Value}</td>
+                                    <td><img src="{$v.Picture}" width="100%" height="50"></td> 
+                                    <td>{$v.StartTime}</td>
+                                    <td>{$v.EndTime}</td>
+                                    <td>
+                                        <if condition="$v['Enabled']==1">
+                                            <a class="btn btn-xs btn-success" onclick='send("{:U('ad_change',['id'=>$v['AdId'],'type'=>'status'])}",this)'>
+                                                    已通过
+                                            </a>
+                                        <else />
+                                           <a class="btn btn-xs btn-danger" onclick='send("{:U('ad_change',['id'=>$v['AdId'],'type'=>'status'])}",this)'>
+                                                    未通过
+                                            </a> 
+                                        </if>
+                                    </td>
+                                    <td>{$v.SortOrder}</td>
+                                    <td>{$v.ClickCount}</td>
+
+                                    <td>
+                                       <a onclick="openmodel('{:U('ad_save',['AdId'=>$v['AdId']])}')" class="btn btn-outline btn-default">
+                                            <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                       </a>
+                                       <a onclick='del("{:U('ad_del',['AdId'=>$v['AdId']])}",this)' class="btn btn-outline btn-default"> 
+                                            <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </foreach>
+                           </tbody>
+                    </table>
+                       <div class="clearfix">{$pager}</div>
+
+
+                            </div>
+                        </div>
+                        <!-- End Example Events -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Panel Other -->
+    </div>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/admin/js/mk.js"></script>
+
+<script>
+    function openmodel(url)
+    {
+        layer.open({
+            type: 2,
+            title: false,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['70%', '90%'],
+            content: url //iframe的url
+        });
+    }
+
+
+</script>
+</body>
+</html>

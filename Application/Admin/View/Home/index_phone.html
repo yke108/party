@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Cache" content="no-cache">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no">
+  <title>党建天地</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+  <link rel="stylesheet" href="__PUBLIC__/swiper/css/swiper.min.css">
+</head>
+<style>
+  [v-cloak] {
+    display: none
+  }
+  .pointer{cursor: pointer}
+html,body{height: auto;}
+  body * {
+    box-sizing: border-box;font-size: 12px;
+  }
+  img{width: 100%;height: auto;vertical-align: middle;}
+  #ads_box{height: 3.40rem;overflow: hidden;}
+  .swiper-slide{height:100%;background-position: center center !important;background-size: 100% auto !important;}
+  /* .swiper-slide img{width: 100%;height: auto;} */
+  .swiper-pagination-bullet{background: #fff;opacity:1;}
+  .swiper-pagination-bullet-active{background: #ED3E42;opacity:1;}
+
+  .notice{ width: 100%; height: .73rem; line-height: .73rem;  font-size: .26rem; border-bottom: solid 1px #F0F0F0; position: relative; background-color: #FFF;}
+  .notice-icon{ position: absolute; top: 0; left: .35rem; white-space: nowrap; color: #E52633; font-weight: 800; z-index: 1;}
+  .notice-swiper{position: absolute; top: 1px; left: 2.2rem; right: 0.55rem;height: .73rem; line-height: .73rem; }
+  .notice-icon img{ width: .34rem; height: .34rem; vertical-align: middle; margin: -.04rem .15rem 0 0;}
+  .notice-list{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #262626;height:100%;display:inline-block;vertical-align: middle;}
+  .notice-next{ position: absolute; right: .25rem; top: 0; width: .10rem; height: .20rem;}
+
+  .quick-gird{ display: flex; flex-wrap: wrap; padding: .15rem 0; position: relative; background-color: #FFF;}
+  .quick-gird .gird-item{ width: 33.3333%; text-align: center; font-size: .28rem; color: #262626; border-right: solid 1px #F0F0F0; box-sizing: border-box; padding: .20rem 0; border-bottom: solid 1px #F0F0F0; }
+  .quick-gird .gird-item img{ width: 1.40rem; height: 1.40rem; display: block; margin: 0 auto;}
+  .quick-gird .gird-item:nth-child(3n){ border-right: none;}
+  .quick-gird .gird-item:nth-child(n+4){ border-bottom: none; }
+
+  .dynamic,.party,.activity{background-color:#FFF;margin-top:.20rem;}
+  .index-tit{ margin-left: .40rem; border-bottom: solid 1px #F0F0F0; padding: .30rem .30rem .30rem 0; font-size: .30rem;}
+  .index-tit span{ display: inline-block; border-radius: 50%; width: .10rem; height: .10rem; background-color: #E52633; vertical-align: middle; margin: -2px .15rem 0 0;}
+  .index-tit em{ color: #878787; font-size: .24rem; border-left: solid 1px #F0F0F0; margin-left: .20rem; padding-left: .20rem;}
+  .index-tit .more{ float: right; font-size: .26rem; line-height: .58rem; color: #535353;}
+  .index-tit .more img{ width: .30rem; height: .30rem; vertical-align: middle; margin: -3px 0 0 .15rem;}
+
+  /* templates/dynamic/dynamic.wxss */
+  .dynamic-item{ margin-left: .40rem; padding: .25rem .25rem .25rem 0; display: flex; border-bottom: solid 1px #F0F0F0;}
+  .dynamic-item-img{ width: 1.90rem; height: 1.60rem; line-height: 1.60rem;border: solid 1px #F0F0F0; border-radius: 5px; overflow: hidden;}
+  .dynamic-item-info{ flex: 1; min-width: 0; margin-left: .30rem;}
+  .dynamic-item-info .dynamic-item-tit{ font-size: .28rem; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;overflow: hidden; height: .80rem; color: #262626;}
+  .dynamic-item-info .dynamic-item-type{ font-size: .26rem; color: #878787; margin-top: .30rem;}
+  .dynamic-item-info .dynamic-item-type span{ margin-right: .15rem;}
+  /* templates/party/party.wxss */
+  .party-item{ padding: 0 .30rem .30rem; border-bottom: solid .20rem #F0F0F0;}
+  .party-item:last-child{border-bottom: none;}
+  .party-item-name{ display: flex; align-items: center; padding-top: .20rem; padding-right: .30rem;}
+  .party-item-name > img{ vertical-align: middle;}
+  .avatar{ width: .90rem; height: .90rem; border-radius: 50%; margin-top: .15rem; border: solid 1px #F0F0F0; overflow: hidden;}
+  .avatar img{ vertical-align: top;}
+  .name-info{ flex: 1; margin: 0 .30rem;}
+  .name-info > .text{ font-size: .28rem; display: block;}
+  .name-info > p{ display: block; font-size: .24rem; color: #878787;margin: 0}
+  button.share{ width: .36rem; height: .36rem; background-color: transparent !important; border: none; padding: 0; line-height: normal; border-radius: 0;}
+  button.share:after{ display: none;}
+  button.share img{ width: .36rem; height: .36rem; vertical-align: top;}
+  .party-item-info{ margin: .30rem 0; font-size: .30rem; word-break: break-all; }
+  .pictures img{ border-radius: 5px; border: solid 1px #F0F0F0;}
+  .item-0{ display: none;}
+  .item-1{ padding-bottom: .20rem;}
+  .item-1 img{ width: 3.60rem; height: 3.60rem; vertical-align: top;}
+  .item-2,.item-3{ margin-bottom: -.10rem;}
+  .item-2 img{ width: 2.80rem; height: 2.80rem; vertical-align: top; margin: 0 .20rem .20rem 0;}
+  .item-3 img{ width: 2.00rem; height: 2.00rem; vertical-align: top; margin: 0 .20rem .20rem 0;}
+  .count{ border-top: solid 1px #F0F0F0; padding-top: .30rem; margin-top: .20rem; color: #878787; font-size: .26rem; padding-right: .30rem;}
+  .count > .time{ display: inline-block; line-height: .40rem;}
+  .count > .like{ float: right;}
+  .like > img{ width: .38rem; height: .40rem;}
+
+  /* templates/activity/activity.wxss */
+.activity-item{ background-color: #FFF;}
+.activity_item_pic{ width: 100%; height: 3.40rem;line-height: 3.4rem; overflow: hidden;}
+.activity_item_pic img{vertical-align: middle;}
+.activity-item-tit{ padding: .30rem .30px .10rem .30rem; font-size: .30rem;}
+.activity-item-info{ color: #878787; padding: 0 .30rem .30rem; font-size: .26rem;}
+.activity-item-info span{ margin-right: .45rem;}
+.activity-item-info .text{ color: #E52633; margin-left: .10rem;}
+
+.editor{position: relative;}
+.act_box{border: #E52633 dashed 2px;position: absolute;top:0;left:0;right:0;bottom:0;z-index:999;}
+.act_box_btn{position: absolute;top:-2px;right:-2px;padding:5px 8px;background: #E52633;color: #fff;text-align: center;}
+</style>
+
+<body class="gray-bg" style="background-color:#F0F0F0;">
+  <div id="exapp" v-cloak >
+    <div v-if="opt">
+      <!-- 广告 -->
+        <div class="swiper-container pointer editor" id="ads_box" @click="tabGetData(1)" @mouseenter="part=1">
+            <editsign :part="part" v-if="part==1" @success="tabGetData"></editsign>
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" v-for="(item,index) in opt.AdList" :key="item.AdValue" :style="{background:'url('+item.Picture+') no-repeat'}">
+                <!-- <img :src="item.Picture" alt=""> -->
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+          <!-- 通知 -->
+          <div class="white-bg  pointer editor" @click="tabGetData(2)" @mouseenter="part=2">
+              <editsign :part="part" v-if="part==2" @success="tabGetData"></editsign>
+              <div class="notice">
+                  <div class='notice-icon'><img src='/public/img/index/tips.png'>通知公告</div>
+                  <div class="swiper-container notice-swiper" id="notice_box">
+                      <div class="swiper-wrapper">
+                        <div class="swiper-slide " v-for="(item,index) in opt.NoticeList" :key="item.NoticeId">
+                          <span class="notice-list">{{item.Title}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class='notice-next'><img src='/public/img/index/next.png'></div>
+                </div>
+          </div>
+          <!-- 导航 -->
+          <div class='quick-gird pointer editor' @click="tabGetData(6)" @mouseenter="part=6">
+              <editsign :part="part" v-if="part==6" @success="tabGetData"></editsign>
+              <div class='gird-item' v-for="item in quickGirds" :key="item.imgSrc">
+                <div><img :src='item.imgSrc'>{{item.name}}</div>
+              </div>
+            </div>
+          <!--最新动态-->
+          <div class='dynamic white-bg  pointer editor' @click="tabGetData(3)" @mouseenter="part=3">
+              <editsign :part="part" v-if="part==3" @success="tabGetData"></editsign>
+            <div class='index-tit'>
+              <span></span>最新动态<em>每天最新党的快讯</em>
+              <div class="more">更多<img src='/public/img/index/next2.png'></div>
+            </div>
+            <div class='dynamic-item' v-for="item in opt.NewsList" :key="item.Id">
+                <div class='dynamic-item-img'><img :src='item.Images[0]'/></div>
+                <div class='dynamic-item-info'>
+                  <div class='dynamic-item-tit'>{{item.Title}}</div>
+                  <div class='dynamic-item-type'>
+                    <span>阅读 {{item.ReadNum}}</span><span>收藏 {{item.CollectNum}}</span>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <!--发现党员-->
+          <div class='party white-bg  pointer editor' @click="tabGetData(4)" @mouseenter="part=4">
+              <editsign :part="part" v-if="part==4" @success="tabGetData"></editsign>
+              <div class='index-tit'>
+                <span></span>发现党员<em>看看身边的好党友</em>
+                <div class="more">更多<img src='/public/img/index/next2.png'></div>
+              </div>
+              <!-- <party newparty="{{MienList}}" wx:if="{{MienList.length}}"></party> -->
+              <!--templates/party/party.wxml-->
+              <div class='party-item' v-for='item in opt.MienList' :key='item.MienId'>
+                  <div class='party-item-name'>
+                    <div class='avatar'>
+                      <img :src='item.User.UserImg'></img>
+                    </div>
+                    <div class='name-info'>
+                      <span class="text">{{item.User.RealName}}</span>
+                      <p>{{item.User.Sex}} {{item.User.Age}}岁</p>
+                    </div>
+                    <button type="button" class='share'><img src='/public/img/index/Shape.png'></img></button>
+                  </div>
+                  <div class='party-item-info'>{{item.Content}}</div>
+                  <div class='pictures' :class="'item-' + item.type">
+                    <img v-for="img in item.SmallPhoto" :src="img"></img>
+                  </div>
+                  <div class='count'>
+                    <div class='time'>{{item.Addtime}} <em v-if="Number(item.Likenum) > 0">/ 赞：{{item.Likenum}}</em></div>
+                    <div class='like'>
+                      <img src='/public/img/index/good_1.png' v-if="item.OtherStatus"></img>
+                      <img src='/public/img/index/good_2.png' v-else></img>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          <!--活动-->
+            <div class='activity white-bg  pointer editor' @click="tabGetData(5)" @mouseenter="part=5">
+                <editsign :part="part" v-if="part==5" @success="tabGetData"></editsign>
+                <div class='index-tit'>
+                  <span></span>党建活动<em>团结党员力量、唤醒心声</em>
+                  <div class="more">更多<img src='/public/img/index/next2.png'></div>
+                </div>
+                <!-- <activity newactivity="{{EvenList}}" wx:if="{{EvenList.length}}"></activity> -->
+                <!--templates/activity/activity.wxml-->
+                  <div class='activity-item' v-for="item in opt.EvenList" :key="item.EvenId">
+                      <div class='activity_item_pic' :style="{background:'url('+item.Photo+') no-repeat center center',backgroundSize:'100% auto'}">
+                        <!-- <img :src="item.Photo" ></img> -->
+                      </div>
+                      <div class='activity-item-tit'>{{item.Title}}</div>
+                      <div class='activity-item-info'>
+                        <span>活动时间<span class="text">{{EvenListTime(item.Addtime)}}</span></span>
+                        <span>报名人数<span class="text">{{item.PartakeNum}} / {{item.PeopleNum}}人</span></span>
+                      </div>
+                    </div>
+                  </div>
+    </div>
+  </div>
+  <script type="text/x-template" id="editsign">
+    <div class="act_box">
+      <div class="act_box_btn" @click.stop="edit">编辑</div>
+    </div>
+  </script>
+  <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+  <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+  <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+  <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+  <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+  <script src="__PUBLIC__/swiper/js/swiper.min.js"></script>
+  <script src="__PUBLIC__/layer/layer.js"></script>
+  <script src="__PUBLIC__/layer/laydate/laydate.js"></script>
+  <script src="__PUBLIC__/vue/vue.js"></script>
+  <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+  <script src="__PUBLIC__/ajaxApi/index.js"></script>
+  <script type="text/javascript">
+  var VM;
+  Vue.component("editsign",{
+    template:"#editsign",
+    props:['part'],
+    methods:{
+      edit: function(){
+        this.$emit('success',this.part)
+      }
+    }
+  })
+  VM = new Vue({
+      el: "#exapp",
+      data: {
+        opt:'',
+        part:'',
+        // actImgStyle:{
+        //   background:'url("+item.Photo+") no-repeat center center'
+        // },
+        quickGirds:[
+          { imgSrc: '/public/img/index/icon1.png', name: '党建快讯'},
+          { imgSrc: '/public/img/index/icon2.png', name: '本地党建'},
+          { imgSrc: '/public/img/index/icon3.png', name: '党员动态'},
+          { imgSrc: '/public/img/index/icon4.png', name: '党建活动'},
+          { imgSrc: '/public/img/index/icon5.png', name: '在线阅读'},
+          { imgSrc: '/public/img/index/icon6.png', name: '视频学习'}
+          ]
+      },
+      watch:{
+        'opt': function(){
+          this.initSwiper();
+        }
+      },
+      created:function() {
+        this.setfont();
+        window.addEventListener("resize", this.setfont);
+      },
+      mounted:function(){
+        this.getData();
+      },
+      methods:{
+        getData: function(part){
+          var _this = this;
+          indexList().then(function(res){
+            res.MienList.forEach(function(item){
+              let num = item.SmallPhoto.length
+              item["type"] = 3
+              if (num === 1) {
+                item["type"] = 1
+              }
+              if (num === 2 || num === 4) {
+                item["type"] = 2
+              }
+              if (num === 0) {
+                item["type"] = 0
+              }
+              item.Addtime = new Date(Number(item.Addtime)*1000).format('yyyy-MM-dd')
+          })
+            _this.opt = res;
+            _this.tabGetData(part?part:1)
+          })
+        },
+        tabGetData: function(type){
+          var _this = this
+          this.$nextTick(function(){
+            var opt = _this.opt
+            var trigger_parent =_this.trigger_parent
+            _this.part = type
+            switch(Number(type)){
+              case 1:
+              trigger_parent('ShowTable',{type:1,list:opt.AdList,title:'广告'})
+              break
+              case 2:
+              trigger_parent('ShowTable',{type:2,list:opt.NoticeList,title:'公告'})
+              break
+              case 3:
+              trigger_parent('ShowTable',{type:3,list:opt.NewsList,title:'最新动态'})
+              break
+              case 4:
+              trigger_parent('ShowTable',{type:4,list:opt.MienList,title:'党员风采'})
+              break
+              case 5:
+              trigger_parent('ShowTable',{type:5,list:opt.EvenList,title:'活动'})
+              break
+            }
+          })
+        },
+        EvenListTime: function(time){
+        var Time = new Date(Number(time)*1000).format("yyyy-MM-dd");
+        return Time;
+        },
+        trigger_parent: function(funName,opt){
+						// 触发父页面VMP内方法
+						var sphone = setInterval(function(){
+							if(parent.VMP){
+                parent.VMP[funName](opt);
+									clearInterval(sphone);
+									}
+						},100)
+					},
+        initSwiper:function(){
+          let _this = this
+          this.$nextTick(function(){
+            var mySwiper = new Swiper('#ads_box', {
+              autoplay: {
+                disableOnInteraction: false,
+                delay: 3000,
+              },//可选选项，自动滑动
+              loop:true,
+              pagination: {
+                el: '.swiper-pagination',
+              },
+            })
+            var mySwiper2 = new Swiper('#notice_box', {
+              direction : 'vertical',
+              autoplay: {
+                disableOnInteraction: false,
+                delay: 2500,
+              },//可选选项，自动滑动
+             loop:true,
+            })
+            _this.trigger_parent('iframeHeight')
+          })
+        },
+        setfont:function(){
+          //自适应保持比例，7.5为设计图宽度为750px的比例
+          var opw = document.documentElement.clientWidth;
+          var pw = opw > 750 ? 750 : opw;
+          var fz = pw / 7.5;
+          var html = document.querySelector("html");
+          window.fontSize = fz;
+          html.style.fontSize = fz + "px";
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

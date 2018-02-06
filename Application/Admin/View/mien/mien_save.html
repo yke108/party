@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:03 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>H+ 后台主题UI框架 - Bootstrap Table</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        
+        <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5><if condition="isset($_GET['mien_id'])">修改风采<else />添加风采</if></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li>
+                                <a href="form_basic.html#">选项1</a>
+                            </li>
+                            <li>
+                                <a href="form_basic.html#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+                <php>$info = $result['Info']</php>
+                <div class="ibox-content">
+                    <form class="form-horizontal" id="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">风采内容</label>
+
+                            <div class="col-sm-10">
+                                <textarea name="content" class="form-control" placeholder="请输入风采内容">{$info.Content}</textarea>
+                            </div>
+                        </div>
+                      
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">发布用户</label>
+                            <div class="col-sm-10">
+                                <select class="form-control m-b" name="user_id">
+                                    <option value="">--请选择用户--</option>
+                                    <foreach name="result['User']" item="v">
+                                        <option value="{$v.UserId}" <if condition="$info['UserId']==1"> selected </if>>{$v.UserName}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+                       
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">阅读量</label>
+
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <input type="text" value="{$info.Readnum}" name="readnum" placeholder="请初始化阅读量" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Like量</label>
+
+                            <div class="col-sm-10">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <input type="text" name="likenum" value="{$info.Likenum}" placeholder="请初始化Like量" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       <div class="hr-line-dashed"></div>
+                       <div class="form-group">
+                            <label class="col-sm-2 control-label">图片上传</label>
+                            <div class="col-sm-10">
+                                <div class="upfiles">
+                                    <if condition="$info['Photo']!=''">
+                                        <div class="box">
+                                            <img src="{$info.Photo}"  width="100" height="100" style="margin-right:5px">
+                                            <div class="del" onclick="delimg(this)">x</div>
+                                            <input type="hidden" name="photo" value="{$info.Photo}">
+                                        </div>
+                                    </if>
+                                </div>
+                                <br>
+                                <button type="button" sqltype="photo" more="1" class="uploadimg btn btn-success">图片上传</button>
+                                <script name="nothink" type="text/plain" id="uploadeditor"></script>
+                            </div>
+                       </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <if condition="isset($info['MienId'])"><input type="hidden" name="mien_id" value="{$info['MienId']}"></if>
+                                <button class="btn btn-primary" >保存内容</button>
+                                <a class="btn btn-white" href="{:U('mien_list')}">返回</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+       
+    </div>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+</body>
+
+<script type="text/javascript" charset="utf-8" src="http://ueditor.baidu.com/website/js/jquery-1.11.1.min.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/UE/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/UE/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>
+<script src="__PUBLIC__/UE/upload.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<style>
+.box{
+    display: inline-block;
+    position: relative;
+    margin-right:20px;
+}
+.upfiles img{
+    margin-top: 10px;
+}
+.upfiles div.del{
+    position: absolute;
+    top: 5px;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    line-height: 14px;
+    border-radius: 50%;
+    background-color: #FF0000;
+    color: #FFF;
+    font-family: arial;
+
+}
+</style>
+<script type="text/javascript">
+    $("form").submit(function(e){
+         $.ajax({
+            url: "{:U('')}",
+            type: 'POST',
+            data: $('#form').serialize(),
+            success:function(data){
+                if(data.status==1)
+                {
+                    layer.msg(data['info'],{'icon':6,'time':'1000'},function(){
+                         $(location).attr('href','{:U('mien_list')}');
+                        
+                    });
+                }else{
+                    layer.msg(data['info'],{'icon':5});
+                }
+            },
+        })
+         return false;
+    });
+
+
+</script>
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:06 GMT -->
+</html>

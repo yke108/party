@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <!-- Mirrored from www.zi-han.net/theme/hplus/table_basic.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:01 GMT -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+  </head>
+  <style type="text/css">
+  .client-avatar{width:42px;height:42px;line-height:38px;display:inline-block;border-radius:50%;border:1px solid #f0f0f0;overflow:hidden;text-align:center;vertical-align:middle;background: #fff;}
+  .client-avatar.plus{width:80px;height:80px;line-height:76px;margin-bottom:10px}
+  </style>
+  <body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+      <div class="row">
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>阅读排行榜</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>名次</th>
+                            <th>头像</th>
+                            <th>姓名</th>
+                            <th>地区</th>
+                            <th>积分</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="result['StudyList']" id="vo">
+                        <tr>
+                            <td><span class="label label-danger">{$vo.rank}</span></td>
+                            <td><div class="client-avatar"><img alt="图片" src="{$vo.user_img}" class="category_img"></div></td>
+                            <td>{$vo.real_name}</td>
+                            <td>{$vo.district}</td>
+                            <td><span class="label label-warning">{$vo.point}</span></td>
+                        </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>风采排行榜</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>名次</th>
+                            <th>头像</th>
+                            <th>姓名</th>
+                            <th>地区</th>
+                            <th>积分</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="result['MienList']" id="vo">
+                        <tr>
+                            <td><span class="label label-danger">{$vo.rank}</span></td>
+                            <td><div class="client-avatar"><img alt="图片" src="{$vo.user_img}" class="category_img"></div></td>
+                            <td>{$vo.real_name}</td>
+                            <td>{$vo.district}</td>
+                            <td><span class="label label-warning">{$vo.point}</span></td>
+                        </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>考试排行榜</h5>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>名次</th>
+                            <th>头像</th>
+                            <th>姓名</th>
+                            <th>地区</th>
+                            <th>积分</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="result['ExamList']" id="vo">
+                        <tr>
+                            <td><span class="label label-danger">{$vo.rank}</span></td>
+                            <td><div class="client-avatar"><img alt="图片" src="{$vo.user_img}" class="category_img"></div></td>
+                            <td>{$vo.real_name}</td>
+                            <td>{$vo.district}</td>
+                            <td><span class="label label-warning">{$vo.point}</span></td>
+                        </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

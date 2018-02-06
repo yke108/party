@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="zh-CN">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>党建天地 - 基础表格</title>
+  <meta name="description" content="">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Cache" content="no-cache">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="__PUBLIC__/layer/layui/css/layui.css" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+  <link href="__PUBLIC__/elementui/theme-chalk/index.css" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/mycomm2.css" rel="stylesheet">
+</head>
+<body class="gray-bg">
+  <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+    <transition name="fade" mode="out-in">
+    <keep-alive>
+      <component :is="componentId"
+      @edit="edit"
+      @toggle="toggle"
+      @submit="submit"
+      @previewimg="previewimg"
+      @edit-tree='editTree'
+      :detail='detail'
+      :treenode='treenode'
+      :submitend="submitend" ></component>
+    </keep-alive>
+    </transition>
+  </div>
+  <!-- 书籍列表模板 -->
+  <script type="text/x-template" id="ebooklist">
+  <div class="row">
+      <!-- 左边开始 -->
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="clearfix">书籍列表</h5>
+                    <div class="pull-left">
+                        <div class="radio private">
+                            <label :class="{checked:tbdata.shaiXuan.cat_type==1}" @click="tbdata.shaiXuan.cat_type=1;init()"> 官方</label>
+                            <label :class="{checked:tbdata.shaiXuan.cat_type==2}" @click="tbdata.shaiXuan.cat_type=2;init()"> 自定义</label>
+                        </div>
+                    </div>
+                    <div class="ibox-tools">
+                        <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="$emit('toggle','1')">新增</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="text" name="keyword" v-model="tbdata.shaiXuan.keyword" placeholder="请输入关键词" class="form-control">
+                                <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="init()">搜索</button></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3" v-if="tbdata.shaiXuan.cat_type==2">
+                            <div class="input-group">
+                                <span class="input-group-addon">状态</span>
+                                <select type="text" class="form-control" v-model="tbdata.shaiXuan.status" @change="init()">
+                                    <option value="">请选择状态</option>
+                                    <option value="1">开启</option>
+                                    <option value="2">关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                      <!-- 表格开始 -->
+                        <table class="table table-striped table-hover">
+                            <thead>
+                              <tr>
+                                <!-- 0 -->
+                                <th class="text-center"></th>
+                                <!-- 1 -->
+                                <th class="text-center">图片</th>
+                                <!-- 2 -->
+                                <th class="text-center">标题</th>
+                                <!-- 4 -->
+                                <th class="text-center">章节层数</th>
+                                <!-- 5 -->
+                                <th class="text-center">排序</th>
+                                <!-- 6 -->
+                                <th class="text-center">状态</th>
+                                <!-- 7 -->
+                                <th class="text-center">添加时间</th>
+                                <!-- 8 -->
+                                <th class="text-center">操作</th>
+                              </tr>
+                            </thead>
+                            <tbody v-if="tbdata.data.length">
+                              <tr @click.stop="tb_tr_click(item)"  v-for="(item,index) in tbdata.data" class="pointer">
+                                <!-- 0 -->
+                                <td class="text-center">
+                                    <span class="label label-warning" v-if="item.ref_id&&!Number(item.ref_id)" >自定义</span>
+                                    <span class="label label-primary" v-else >官方</span>
+                                </td>
+                                <!-- 1 -->
+                                <td class="text-center"><div class="table_list_img" :style="{background:'url('+item.image+') no-repeat'}"></div></td>
+                                <!-- 2 -->
+                                <td class="text-center">{{item.title}}</td>
+                                <!-- 4 -->
+                                <td class="text-center">{{item.deep}}</td>
+                                <!-- 5 -->
+                                <td class="text-center">{{item.sort}}</td>
+                                <!-- 6 -->
+                                <td class="text-center">
+                                  <span class="label" :class="{'label-success':item.status==1,'label-danger':item.status==2}">
+                                  {{item.status==1?'启用':'关闭'}}
+                                  </span>
+                                </td>
+                                <!-- 7 -->
+                                <td class="text-center">{{item.add_time}}</td>
+                                <!-- 8 -->
+                                <td align="center" @click.stop>      
+                                  <el-dropdown @command="handleCommand">
+                                    <el-button type="primary" size="small">
+                                      操作菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                      <el-dropdown-item :command="4,item" v-if="tbdata.shaiXuan.cat_type==2&&item.is_option==0">设为任务</el-dropdown-item>
+                                      <el-dropdown-item :command="0,item" v-if="tbdata.shaiXuan.cat_type==2">章节管理</el-dropdown-item>
+                                      <el-dropdown-item :command="1,item" v-if="tbdata.shaiXuan.cat_type==2">编辑</el-dropdown-item>
+                                      <el-dropdown-item :command="2,item,index" :divided="tbdata.shaiXuan.cat_type==2">启/禁用</el-dropdown-item>
+                                      <el-dropdown-item :command="3,item" v-if="tbdata.shaiXuan.cat_type==2">删除</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                  </el-dropdown>
+                                </td>
+                              </tr>
+                            </tbody>
+                            <tbody v-else>
+                                <tr><td class="text-center" colspan="8">暂无数据</td></tr>
+                              </tbody>
+                        </table>
+                        <div id="pagesaion"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 右边开始 -->
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>{{rowdata?'《'+rowdata.title+'》':'书籍'}}章节</h5>
+                    <span class="label label-warning" v-if="!Number(rowdata.ref_id)" style="margin-top: -4px;margin-left: 10px;" v-show="rowdata">自定义</span>
+                    <span class="label label-primary" v-else style="margin-top: -4px;margin-left: 10px;" v-show="rowdata">官方</span>
+                </div>
+                <div class="ibox-content" v-if="treeData">
+                    <!-- <h3>{{'s'}}</h3> -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="text" name="keyword" v-model="treeData.filterText" placeholder="请输入关键词" class="form-control">
+                                <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="">搜索章节</button></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="" style="margin-top: 20px;height: 480px;overflow-y: auto;">
+
+                        <p v-if="rowdata&&tbdata.shaiXuan.cat_type==2">
+                          <button type="button" class="btn btn-sm btn-outline btn-default" @click="$emit('toggle',3,treeData.childnode)">添加顶层章节</button>
+                          <button type="button" class="btn btn-sm btn-outline btn-info" v-if="treeData.childnode.show&&treeData.childnode.data" @click="$emit('toggle',4,treeData.childnode)">添加子章节</button>
+                          <button type="button" class="btn btn-sm btn-outline btn-primary" v-if="treeData.childnode.data" @click="$emit('edit-tree',treeData.childnode)">编辑</button>
+                          <button type="button" class="btn btn-sm btn-outline btn-danger" v-if="treeData.childnode.data" @click="del_tree(treeData.childnode.data.key)">删除</button>
+                        </p>
+                        <el-tree
+                        class="filter-tree article-content"
+                        accordion
+                        node-key="id"
+                        highlight-current
+                        :data="treeData.data"
+                        :props="treeData.defaultProps"
+                        :filter-node-method="filterNode"
+                        @node-click="tree_node_click"
+                        ref="tree">
+                      </el-tree>
+                    </div>
+                </div>
+                <div class="ibox-content" v-else>
+                    <h4 class="text-center">暂无详情</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- 读书新增、修改模板 -->
+<script type="text/x-template" id="artform">
+<div class="row">
+      <!-- 左边开始 -->
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="clearfix">书籍编辑</h5>
+                    <div class="ibox-tools">
+                        <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="$emit('toggle','2')">返回</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <!-- 表单开始 -->
+                    <div v-limitheight1>
+                        <form class="form-horizontal m-t" style="margin-bottom: 20px;">
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">分类：</label>
+                              <div class="col-sm-7">
+                                  <select class="input-sm form-control" v-model="sendData.cat_id">
+                                    <option value="">请选择分类</option>
+                                    <option :value="cc.cat_id" v-for="cc in Category">{{cc.cat_name}}</option>
+                                  </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">标题：</label>
+                              <div class="col-sm-7">
+                                  <input type="text" class="input-sm form-control" v-model="sendData.title">
+                                  </input>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">章节级数：</label>
+                              <div class="col-sm-7">
+                                  <select class="input-sm form-control" v-model="sendData.deep">
+                                      <option value="1" >一级</option>
+                                      <option value="2" >二级</option>
+                                      <option value="3" >三级</option>
+                                    </select>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">排序：</label>
+                              <div class="col-sm-7">
+                                  <input type="number" class="input-sm form-control" v-model="sendData.sort">
+                                  </input>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">状态：</label>
+                                <div class="col-sm-7">
+                                  <div class="radio">
+                                    <label class="myradio" :class="{checked:sendData.status==1}" @click="sendData.status=1"> 启用</label>
+                                    <label class="myradio" :class="{checked:sendData.status==2}" @click="sendData.status=2" style="margin-left: 10px;"> 关闭</label>
+                                  </div>
+                                </div>
+                              </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">简介：</label>
+                              <div class="col-sm-7">
+                                  <textarea  class="form-control" rows="5" v-model="sendData.desc">
+                                  </textarea>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">封面图：</label>
+                              <div class="col-sm-7 upload">
+                                   <div class="lightBoxGallery" v-if="images.length">
+                                     <div class="images_box" v-for="(item,index) in images">
+                                       <span class="images_close" @click.stop="images.splice(index,1)">x</span>
+                                       <img :src="item" alt="" @click.stop="$emit('previewimg',index,images)" style="cursor: pointer;"/>
+                                     </div>
+                                   </div>
+                                  <div id="filePicker" style="margin-top: 10px;">
+                                    <div
+                                    class="pointer btn btn-outline btn-warning webuploader_btn"
+                                    v-uploadimg="{callback:upload_success,limit:1,length:images.length}">上传图片</div>
+                                  </div>
+                                  <div>最多上传一张图</div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <label class="col-sm-3 control-label">详情：</label>
+                              <div class="col-sm-7">
+                                  <textarea id="ueditor"></textarea>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="col-sm-4 col-sm-offset-3">
+                                <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+                              </div>
+                            </div>
+                          </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<!-- 章节新增、修改模板 -->
+<script type="text/x-template" id="treeform">
+  <div class="row">
+        <!-- 左边开始 -->
+          <div class="col-sm-8">
+              <div class="ibox float-e-margins">
+                  <div class="ibox-title">
+                      <h5 class="clearfix">章节编辑</h5>
+                      <div class="ibox-tools">
+                          <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="$emit('toggle','2')">返回</button>
+                      </div>
+                  </div>
+                  <div class="ibox-content">
+                      <!-- 表单开始 -->
+                      <div>
+                          <form class="form-horizontal m-t" style="margin-bottom: 20px;">
+                              <div class="form-group">
+                                  <label class="col-sm-3 control-label">章节名称：</label>
+                                  <div class="col-sm-7">
+                                      <input type="text" class="input-sm form-control" v-model="sendData.node_name">
+                                      </input>
+                                  </div>
+                                </div>
+                              <div class="form-group" v-if="showText">
+                                <label class="col-sm-3 control-label">章节标题：</label>
+                                <div class="col-sm-7">
+                                    <input type="text" class="input-sm form-control" v-model="sendData.title">
+                                    </input>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label class="col-sm-3 control-label">排序：</label>
+                                <div class="col-sm-7">
+                                    <input type="number" class="input-sm form-control" v-model="sendData.sort">
+                                    </input>
+                                </div>
+                              </div>
+                              <div class="form-group" v-if="showText">
+                                <label class="col-sm-3 control-label">正文文本：</label>
+                                <div class="col-sm-7">
+                                    <textarea class="input-sm form-control" rows="10" id="ueditor" v-model="sendData.detail"></textarea>
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-3">
+                                  <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+                                </div>
+                              </div>
+                            </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </script>
+  <!-- 分类弹窗模板 -->
+  <script type="text/x-template" id="categoryselect">
+    <div>
+        <select class="input-sm form-control" id="category_se" v-model="val">
+            <option value="">请选择启用分类</option>
+            <option :value="cc.cat_id" v-for="cc in specialCategory">{{cc.cat_name}}</option>
+        </select>
+    </div>
+</script>
+<script type="text/x-template" id="taskform">
+    <form class="form-horizontal m-t">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">是否重要：</label>
+          <div class="col-sm-7">
+            <div class="radio">
+              <label class="myradio" :class="{checked:reqData.importent_status==1}" @click="reqData.importent_status=1"> 是</label>
+              <label class="myradio" :class="{checked:reqData.importent_status==0}" @click="reqData.importent_status=0" style="margin-left: 10px;"> 否</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">截止时间：</label>
+          <div class="col-sm-7">
+            <input type="text" class="layui-input" v-laydate="{'sendData':reqData}">
+          </div>
+        </div>
+    </form>
+</script>
+  <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+  <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+  <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+  <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+  <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+  <script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+  <script src="__PUBLIC__/UE/ueditor.config.js"></script>
+  <script src="__PUBLIC__/UE/ueditor.all.min.js"></script>
+  <script src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>
+  <script src="__PUBLIC__/layer/layui/layui.all.js"></script>
+  <script src="__PUBLIC__/aliyun-video/lib/es6-promise.min.js"></script>
+  <script src="__PUBLIC__/aliyun-video/lib/aliyun-oss-sdk.min.js"></script>
+  <script src="__PUBLIC__/aliyun-video/aliyun-vod-upload-sdk-1.2.0.min.js"></script>
+  <script src="__PUBLIC__/vue/vue.js"></script>
+  <script src="__PUBLIC__/elementui/index.js"></script>
+  <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+  <script src="__PUBLIC__/ajaxApi/index.js"></script>
+  <script type="text/javascript">
+ /* 注册修改组件中内容div的高度的指令 */
+    Vue.directive('limitheight1', {
+      bind: function (el) {
+        function k(){
+          var wh = document.documentElement.clientHeight;
+          el.style.height = (wh*0.9-40)+'px';
+          el.style['overflowY'] = 'auto'
+          el.style['overflowX'] = 'hidden'
+        }
+        k();
+        window.onresize = k;
+      }
+    });
+  /* 注册列表组件 */
+    Vue.component('ebooklist', {
+      template: '#ebooklist',
+      props:['submitend'],
+      data: function () {
+        return {
+          Category:'',
+          rowdata: '',
+          tbdata: {
+            data: [],
+            shaiXuan: {
+              page: 1,
+              pagesize: 8,
+              cat_type: 2,
+              status: ''
+            },
+            count: 0
+          },
+          treeData:{
+            childnode:{
+              show:false,
+              data:'',
+              timer:new Date().getTime()
+            },
+            filterText: '',
+            data: [],
+            defaultProps: {
+              children: 'children',
+              label: 'node_name'
+            }
+          }
+        }
+      },
+      watch: {
+        'tbdata.cat_type': function (d) {
+          /* 类型（官方、自定义）改变，重新获取列表数据 */
+          this.init();
+        },
+        'treeData.filterText': function(val){
+          this.$refs.tree.filter(val);
+        },
+        'submitend': function(val){
+          /* 监听书籍表单是否提交成功 */
+          this.init()
+          this.tb_tr_click(this.rowdata)
+        }
+      },
+      mounted: function () {
+        this.init()
+        this.initcategory()
+      },
+      methods: {
+        init: function (opt) {
+          /* 获取列表数据 */
+          var _this = this
+          this.$nextTick(function () {
+            var req = $.extend(_this.tbdata,opt)
+            var cat_type = req.shaiXuan.cat_type
+            switch (Number(cat_type)) {
+              case 1:
+                ebook_wh(req.shaiXuan).then(function (res) {
+                  preData(res)
+                })
+                break;
+              case 2:
+                ebook_ebook_list(req.shaiXuan).then(function (res) {
+                  preData(res)
+                })
+                break;
+            }
+            function preData(res){
+              /* 格式化返回的数据并渲染分页 */
+              $.map(res.List,function(item){
+               item.add_time = new Date(Number(item.add_time)*1000).format('yyyy-MM-dd hh:mm')
+               item.subshow = false
+              })
+              req.count = Number(res.Count)
+              req.data = res.List
+              _this.initPagesaion(_this.tbdata)
+            }
+          })
+        },
+         handleCommand: function(command,child){
+              /**
+               * 下拉菜单点击事件
+               * */
+              var item = child.$attrs.item
+              switch (Number(command)){
+                case 0:
+                this.tb_tr_click(item)
+                break;
+                case 1:
+                this.$emit('edit',item)
+                break;
+                case 2:
+                 var index = child.$attrs.index
+                this.switchStatus(item.id,index)
+                break;
+                case 3:
+                this.del_book(item.id)
+                break;
+                case 4:
+                this.setTask(item)
+                break;
+              }
+            },
+            setTask:function(item){
+              /**任务设置弹窗
+               * */
+              var _this = this,taskVm
+              var openOpt = {
+                id:"taskpopwrap",
+                area:["500px","300px"],
+                title:"任务设置",
+                content:'<div id="taskpop">'+$("#taskform").html()+'</div>',
+                success:function(){
+                  taskVm = new Vue({
+                    el:'#taskpop',
+                    data:{
+                      reqData:{
+                        type:'105',
+                        content_id:item.id,
+                        study_time:new Date().format('yyyy-MM-dd'),
+                        importent_status:'0'
+                      }
+                    }
+                  })
+                },
+                yes:function(inx){
+                  var sd = taskVm.$data.reqData
+                  tools_optionadd(sd).then(function(res){
+                    layer.msg(res.Message)
+                    _this.init()
+                    layer.close(inx)
+                  }) 
+                }
+              }
+              layer.open(openOpt)
+            },
+        initcategory: function () {
+          var _this = this
+          /* 获取分类 */
+          ebook_category().then(function (res) {
+            _this.Category = res.cat_list
+          })
+        },
+        initPagesaion: function (opt) {
+          /* 初始化分页 */
+          var _seexcx = this
+          if (!opt.data.length) return
+          layui.use('laypage', function () {
+            var laypage = layui.laypage;
+            //执行一个laypage实例
+            laypage.render({
+              elem: 'pagesaion' //注意，这里的 test1 是 ID，不用加 # 号
+              , layout: ['count', 'prev', 'page', 'next', 'skip']
+              , count: opt.count //数据总数，从服务端得到
+              , limit: opt.shaiXuan.pagesize
+              , curr: opt.shaiXuan.page
+              , jump: function (obj, first) {
+                if (!first) {
+                  opt.shaiXuan.page = obj.curr;
+                  _seexcx.init(opt);
+                }
+              }
+            });
+          });
+        },
+        filterNode: function(value, data) {
+          /* 过滤树形逻辑 */
+          if (!value) return true;
+          return data.node_name.indexOf(value) !== -1;
+        },
+        showsub: function(item,data){
+         /* 展开下拉按钮 */
+         $.map(data,function(im){
+           if(im==item){
+            item.subshow = ! item.subshow
+           }else{
+            im.subshow = false
+           }
+         })
+
+        },
+        del_book: function(id){
+          /* 删除书籍 */
+          var _this = this
+          layer.open({content:'确定要删除此书籍吗？',yes: function(){
+            ebook_del({id:id}).then(function(res){
+              layer.msg(res.Message)
+              _this.init();
+            })
+          }})
+        },
+        del_tree: function(id){
+         /* 删除树的节点 */
+         var _this = this
+          layer.open({content:'确定要删除此书籍章节吗？',yes: function(){
+            ebook_del_node({id:id}).then(function(res){
+              layer.msg(res.Message)
+              if(_this.rowdata){
+                _this.tb_tr_click(_this.rowdata)
+              }
+            })
+          }})
+        },
+        tb_tr_click: function(item){
+         /* 获取章节树形 */
+          var _this = this
+          this.rowdata = item
+          this.treeData.childnode.data = ''
+          sessionStorage.setItem('ebook_rowdata',JSON.stringify(item))
+          ebook_tree_node({ebook_id:item.id,type:this.tbdata.shaiXuan.cat_type}).then(function(res){
+              _this.treeData.data = res.Tree?res.Tree:[]
+          })
+        },
+        tree_node_click: function(data,node,self){
+          this.treeData.childnode.data = node
+          if(node.level==this.rowdata.deep){
+            this.treeData.childnode.show = false
+          }else{
+            this.treeData.childnode.show = true
+          }
+        },
+      switchStatus:function(id,index){
+        /* 启用禁用时操作 */
+        var _this = this
+        var List = _this.tbdata.data
+        var item = List[index]
+        var status = item.status
+        var type = _this.tbdata.shaiXuan.cat_type
+        var refid = item.id
+          /* 如果是取消不用传cat_id */
+        if(status==1){
+          ebook_switchStatus({id:id}).then(function(res){
+            layer.msg(res.Message)
+            _this.init()
+          })
+          return
+        }
+        /* 如果是重新勾选则弹窗选择分类，传分类cat_id */
+        var popVM;
+        layer.open({
+              title: '选择分类',
+              content: '<div id="checkpop">'+$('#categoryselect').html()+'</div>',
+              success: function() {
+                popVM = new Vue({
+                  el: '#checkpop',
+                  data: {
+                    val: type == 1 ? '' : item.cat_id,
+                    specialCategory:JSON.parse(JSON.stringify(_this.Category))
+                  }
+                })
+              },
+              yes: function(windex) {
+                var sval = popVM.$data.val
+                if(!sval) {
+                  layer.msg('操作失败，未选择分类！')
+                  return
+                }
+                ebook_switchStatus({
+                  id: type == 1 ? '' : refid,
+                  cat_id: sval,
+                  ref_id: type == 1 ? refid : ''
+                }).then(function(res) {
+                  layer.msg(res.Message)
+                  _this.init()
+                  layer.close(windex)
+                })
+              }
+            })
+        }
+      }
+    });
+    /* 注册书籍增加，修改组件 */
+    var mol_sendData = {
+      id:'',
+      title:'',
+      desc:'',
+      cat_id:'',
+      detail:'',
+      image:'',
+      status:1,
+      deep:1,
+      sort:100
+    };
+    Vue.component('artform',{
+      template:'#artform',
+      props:['detail'],
+      data: function(){
+       return {
+        UE:'',
+        images:[],
+        Category:[],
+        sendData:JSON.parse(JSON.stringify(mol_sendData))
+       }
+      },
+      watch:{
+        'Category': function(){
+          var _this = this
+          this.$nextTick(function(){
+              _this.initUE();
+          })
+        },
+        'detail': function(d){
+          var _this = this
+          if(d){
+            this.sendData = $.extend(this.sendData,d);
+          }else{
+            this.sendData = JSON.parse(JSON.stringify(mol_sendData))
+          }
+          this.UE.setContent(this.sendData.detail)
+        },
+        'sendData.image': function(d){
+          if(d){
+            this.images[0] = this.sendData.image
+          }else{
+            this.images = []
+          }
+        }
+      },
+      created: function(){
+       this.sendData = $.extend(this.sendData,this.detail);
+       this.initcategory();
+      },
+      methods:{
+        initcategory: function () {
+          var _this = this
+          /* 获取分类 */
+          ebook_category().then(function (res) {
+            _this.Category = res.cat_list
+          })
+        },
+        initUE:function(){
+          var _this = this
+          this.UE = UE.getEditor('ueditor',{
+              maximumWords:150000,
+              initialFrameWidth:'100%',
+              initialFrameHeight:400,
+              autoFloatEnabled:false,
+              autoHeight: false
+            })
+          this.UE.ready(function(){
+            _this.UE.setContent(_this.sendData.detail)
+          })
+        },
+        upload_success: function(res,file){
+          this.images.push(res.url)
+        },
+        save: function(){
+          var _this = this
+          this.sendData.image = this.images[0];
+          this.sendData.detail = this.UE.getContent();
+          ebook_create_or_modify(this.sendData).then(function(res){
+            layer.msg(res.Message)
+            _this.$emit('submit')
+          })
+        }
+      }
+    })
+/* 注册章节编辑、新增组件 */
+var mol_sendData_tree = {
+      id:'',
+      node_name:'',
+      title:'',
+      detail:'',
+      sort:100,
+      ebook_id:'',
+      pid:''
+    };
+    Vue.component('treeform',{
+      template:'#treeform',
+      props:['treenode'],
+      data: function(){
+       return {
+        sendData:JSON.parse(JSON.stringify(mol_sendData_tree)),
+        rowdata:'',
+        showText:false
+       }
+      },
+       computed:{
+          treehandletype: function(){
+            return this.treenode.timer.split(',')[1]
+          }
+        },
+        watch: {
+          'treenode.timer': function(d) {
+            var s = d.split(',')[1]
+            this.getNode(s)
+          }
+        },
+      created: function(){
+       this.getNode(this.treehandletype)
+      },
+      methods:{
+        getNode: function(type){
+          var _this = this
+          this.rowdata = JSON.parse(sessionStorage.getItem('ebook_rowdata'))
+          this.sendData = JSON.parse(JSON.stringify(mol_sendData_tree))
+          this.sendData.ebook_id = this.rowdata.id
+          this.showText = false
+          /*console.log(type)
+          console.log(this.treenode)
+          console.log(this.rowdata)*/
+          if(this.rowdata.deep==1||(Number(this.treenode.data.level)+1)==this.rowdata.deep){
+            this.showText = true
+          }
+          switch (Number(type)) {
+            case 0:
+          /* 添加顶级章节 */
+              this.sendData.pid = 0
+            break;
+            case 1:
+            /* 添加子章节 */
+              this.sendData.pid = this.treenode.data.key
+            break;
+            case 2:
+            /* 编辑 */
+            if(this.treenode.data.level==this.rowdata.deep){
+                this.showText = true
+              } else{
+                this.showText = false
+              }
+              var id = this.treenode.data.key
+              ebook_node_info({id:id}).then(function(res){
+                  _this.sendData = $.extend(_this.sendData,res.Info);
+                })
+            break;
+          }
+        },
+        save: function(){
+          var _this = this
+          switch (Number(this.treehandletype)) {
+            case 0:
+            case 1:
+            ebook_add_node(this.sendData).then(function(res){
+              layer.msg(res.Message)
+              _this.$emit('submit')
+            })
+              break;
+            default:
+            ebook_edit_node(this.sendData).then(function(res){
+              layer.msg(res.Message)
+              _this.$emit('submit')
+            })
+              break;
+          }
+        }
+      }
+    })
+    /* 使用组件 */
+    var VM = new Vue({
+      el: "#exapp",
+      data: {
+        componentId: 'ebooklist',
+        submitend:false,
+        detail:'',
+        treenode:{}
+      },
+      methods:{
+        toggle: function(jade,node){
+         /* 转换视图 */
+          this.detail = ''
+          this.treenode.timer = new Date().getTime()+','
+          switch (Number(jade)) {
+            case 1:
+            this.componentId = 'artform'
+            break;
+            case 2:
+            this.componentId = 'ebooklist'
+            break;
+            case 3:
+            this.treenode = node
+            this.treenode.timer = new Date().getTime().toString()+','+0
+            this.componentId = 'treeform'
+            break;
+            case 4:
+            this.treenode = node
+            this.treenode.timer = new Date().getTime().toString()+','+1
+            this.componentId = 'treeform'
+            break;
+          }
+        },
+        previewimg:function(index,imgs){
+          var len = imgs.length,data=[];
+          for(var i=0;i<len;i++){
+            var obj = {};
+            obj.src = imgs[i];
+            obj.pid = i;
+            data.push(obj)
+          }
+          layer.photos({
+            photos: {
+                "id": 123, //相册id
+                "start": index, //初始显示的图片序号，默认0
+                "data": data
+              }
+            ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+          });
+        },
+        edit: function(detail){
+         /* 文章列表单行点击编辑 */
+         this.detail = detail
+         this.componentId = 'artform'
+        },
+        editTree: function(d){
+         /* 章节树形点击编辑 */
+         this.treenode = d
+         this.treenode.timer = new Date().getTime().toString()+','+2
+         this.componentId = 'treeform'
+        },
+        submit: function(val){
+         /* 书籍修改、编辑触发事件 */
+         this.submitend = new Date().getTime()
+        }
+      }
+    })
+  </script>
+</body>
+</html>

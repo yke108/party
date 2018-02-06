@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:03 GMT -->
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>H+ 后台主题UI框架 - Bootstrap Table</title>
+    <meta name="keywords" content="H+后台主题,后台bootstrap框架,会员中心主题,后台HTML,响应式后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5><if condition="isset($_GET['even_id'])">修改活动<else />添加活动</if></h5>
+                </div>
+                <php>$info = $result['Info']</php>
+                <div class="ibox-content">
+                    <form class="form-horizontal" id="form">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">广告位置</label>
+
+                            <div class="col-sm-10">
+                                <select  class="form-control"  name="PositionCode">
+                                   
+                                    <foreach name="result['AdLocation']" key="k" item="v">
+                                        <option value="{$k}"<if condition="$info['PositionCode']==$k">selected </if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+
+                      
+
+                       <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">广告标题</label>
+
+                            <div class="col-sm-10">
+                                <input type="text"  class="form-control" name="Title" placeholder="请输入标题" value="{$info.AdTitle}" id="">
+                            </div>
+                        </div>
+                        
+                       <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">广告类型</label>
+
+                            <div class="col-sm-10">
+                                <select  class="form-control"  name="AdType" id="AdType" onchange="getvalue('{:U('location')}')">
+                                    <option value="null">--请选择--</option>
+                                    <foreach name="result['AdData']" key="k" item="v">
+                                        <option value="{$k}"<if condition="$info['AdType']==$k">selected </if>>{$v}</option>
+                                    </foreach>
+                                </select>
+                            </div>
+                        </div>
+
+                       <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">广告内容</label>
+
+                            <div class="col-sm-10">
+                               <select  class="form-control "  name="Value" id="value">
+                                    <option value="null">--请选择--</option>
+                                    <if condition="$info['Value']">
+                                        <foreach name="info['Value']" key="kkk" item="vvv">
+                                            <option value="{$kkk}" <if condition="$info['AdValue']==$kkk">selected </if>>{$vvv}</option>
+                                        </foreach>
+                                    </if>
+                                </select>
+                            </div>
+                        </div>
+
+                       <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">开始时间-结束时间</label>
+                            <div class="col-sm-10">
+                                <input placeholder="点击选择开始和结束时间"  class="form-control layer-date" <if condition="!empty($info['StartTime'])">value="{$info['StartTime']} // {$info['EndTime']}" </if>name="Date" id="date">
+                            </div>
+                        </div>
+
+
+
+                       <div class="hr-line-dashed"></div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">排序值</label>
+
+                            <div class="col-sm-10">
+                                <input type="text"  class="form-control" name="SortOrder" value="{$info.AdTitle}" placeholder="请输入排序值(默认为1)" id="">
+                            </div>
+                        </div>
+
+                      
+                       <div class="hr-line-dashed"></div>
+                       <div class="form-group">
+                            <label class="col-sm-2 control-label">广告图片</label>
+                            <div class="col-sm-10">
+                                <div class="upfiles">
+                                    <if condition="$info['AdPicture']">
+                                        <div class="box">
+                                            <img src="{$info.AdPicture}"  width="100" height="100" style="margin-right:5px">
+                                            <div class="del" onclick="delimg(this)">x</div>
+                                            <input type="hidden" name="photo" value="{$info.AdPicture}">
+                                        </div>
+                                    </if>
+                                </div>
+                                <br>
+                                <button type="button" sqltype="photo" more="1" class="uploadimg btn btn-success">图片上传</button>
+                                <script name="nothink" type="text/plain" id="uploadeditor"></script>
+                            </div>
+                       </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <if condition="isset($info['AdId'])"><input type="hidden" name="AdId" value="{$info['AdId']}"></if>
+                                <button class="btn btn-primary" >保存内容</button>
+                                <a class="btn btn-white" href="{:U('even_list')}">返回</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+       
+    </div>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+
+</body>
+
+<script type="text/javascript" charset="utf-8" src="http://ueditor.baidu.com/website/js/jquery-1.11.1.min.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/UE/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/UE/ueditor.all.js"> </script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>
+<script src="__PUBLIC__/UE/upload.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript" src="__PUBLIC__/layer/laydate/laydate.js"></script>
+<style>
+.box{
+    display: inline-block;
+    position: relative;
+    margin-right:20px;
+}
+.upfiles img{
+    margin-top: 10px;
+}
+.upfiles div.del{
+    position: absolute;
+    top: 5px;
+    right: 0;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    line-height: 14px;
+    border-radius: 50%;
+    background-color: #FF0000;
+    color: #FFF;
+    font-family: arial;
+
+}
+</style>
+<script type="text/javascript">
+    
+    var oldvalue = '<option value="null">--请选择--</option>';
+
+    laydate.render({
+        elem: '#date'
+        ,type: 'datetime'
+        ,range: '//'
+    }); 
+
+
+    $("form").submit(function(e){
+         $.ajax({
+            url: "{:U('')}",
+            type: 'POST',
+            data: $('#form').serialize(),
+            success:function(data){
+                if(data.status==1)
+                {
+                    layer.msg(data['info'],{'icon':6,'time':'1000'},function(){
+
+                        parent.location.href="{:U('ad_list')}";
+                        parent.layer.closeAll('iframe');
+                        
+                    });
+                }else{
+                    layer.msg(data['info'],{'icon':5});
+                }
+            },
+        })
+         return false;
+    });
+
+    function getvalue(url)
+    {
+        if($('#AdType').val()!='null')
+        {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {'type': $('#AdType').val()},
+                success:function(data){
+                    if(data.Error==0)
+                    {
+                        str = '';
+                        for(var i in data.List)
+                        {
+                            str += '<option value="'+i+'">'+data.List[i]+'</option>';
+                        }
+                        $('#value').html(oldvalue+str);
+                    }else{
+                        //获取失败则返回最之前的请选择
+                        $('#value').html(oldvalue);
+                    }
+                }
+            })
+        }else{
+            //获取失败则返回最之前的请选择
+            $('#value').html(oldvalue);
+        }
+    }
+
+</script>
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/table_bootstrap.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:06 GMT -->
+</html>

@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+  <!-- Mirrored from www.zi-han.net/theme/hplus/table_basic.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:01 GMT -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+  </head>
+  <style type="text/css">
+    [v-cloak]{display:none}
+    .pointer{cursor:pointer}
+    .category_img{width:100% !important;height:auto !important;vertical-align: middle;border-radius:0 !important;}
+    .client-avatar{width:42px;height:42px;line-height:38px;display:inline-block;border-radius:8px;border:1px solid #f0f0f0;overflow:hidden;text-align:center;background: #fff;}
+    .client-avatar.plus{width:80px;height:80px;margin-bottom:10px}
+    .label{user-select: none;-ms-user-select: none;-webkit-user-select: none;-moz-user-select: none;}
+    .radio label{position: relative;}
+    .radio label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .radio label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-144px 0px;}
+    .radio label.checked:before{background-position:-168px 0px}
+    .radio.private{ margin: 0;margin-left: 10px;}
+    .radio.private label{margin-left: 20px;}
+    .checkbox label{position: relative;}
+    .checkbox label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .checkbox label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-24px 0px;}
+    .checkbox label.checked:before{background-position:-48px 0px}
+    .checkbox.private{ margin: 0;margin-left: 10px;}
+    .checkbox.private label{margin-left: 20px;font-size: 16px;}
+    .btn-tools{position:absolute;top:50%;margin-top:-7px;right:0}
+    .article-content *{max-width: 100%;word-break: break-all;}
+
+    .model_zcr{background: rgba(0,0,0,0.6);position: fixed;top: 0;bottom: 0;left: 0;right: 0;z-index: 19901110;}
+    .model_zcr .box{background: #fff;position: absolute;top: 50%;left: 50%;overflow: hidden;padding-bottom: 20px;}
+    .model_zcr .content{height: calc(100% - 50px);overflow-y: auto;overflow-x: hidden;}
+
+    select.input-sm{height: 32px !important;line-height: 25px !important;}
+
+    .images_box{display: inline-block;border: 1px solid  #e7e7e7;border-radius: 4px;position: relative;}
+    .images_box:nth-child(n+1){margin-left: 10px;}
+    .images_box .images_close{width:20px;height:20px;color: #fff;background:#ed5666;position: absolute;top: -6px;right: -6px;border-radius: 50%;}
+    .images_box .images_close{line-height: 20px;text-align: center;z-index: 1;cursor: pointer;}
+    .images_box img{margin: 5px;width: 130px;height: auto;vertical-align: middle;}
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    input[type="number"]{
+      -moz-appearance: textfield;
+    }
+  </style>
+
+  <body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5 class="clearfix">微信小程序列表</h5>
+
+              <div class="ibox-tools">
+                <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="modelShow=!modelShow;add()">新增</button>
+              </div>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="input-group">
+                      <input type="text" name="keyword" v-model="shaiXuan.keyword" placeholder="请输入关键词" class="form-control">
+                      <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="getList()">搜索</button></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="input-group">
+                      <span class="input-group-addon">状态</span>
+                      <select type="text" class="form-control" v-model="shaiXuan.status" @change="getList()">
+                        <option value="">请选择状态</option>
+                        <option value="1">开启</option>
+                        <option value="2">关闭</option>
+                      </select>
+                  </div>
+                </div>
+                <!-- <div class="col-sm-3">
+                    <div class="input-group s-b">
+                     <span class="input-group-addon">推荐</span>
+                     <select type="text" class="form-control" v-model="shaiXuan.is_hot" @change="getList()">
+                        <option value="">请选择推荐</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                      </select>
+                  </div>
+                </div> -->
+              </div>
+              <div :style="{maxHeight:modelStyle.height_c*0.8 + 'px',overflowY: 'auto'}">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center;">支部名称</th>
+                      <th style="text-align: center;">支部负责人</th>
+                      <th style="text-align: center;">支部手机</th>
+                        <th style="text-align: center;">支部地址</th>
+                        <th style="text-align: center;">地区编号(待删除)</th>
+                        <th style="text-align: center;">状态</th>
+                      <th style="text-align: center;">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="List.length">
+                    <tr @click="getInfo(item)" v-for="(item,index) in List" class="pointer" style="text-align:center">
+                      <td>
+                          {{item.branch_name}}
+                      </td>
+                        <td>
+                            {{item.user}}
+                        </td>
+                        <td>
+                             {{item.phone}}
+                        </td>
+                        <td>
+                            {{item.address}}
+                        </td>
+                        <td>
+                            {{item.region_code}}
+                        </td>
+                        <td>
+                            {{item.status_label}}
+                        </td>
+
+                      <td align="center">
+                    <!--    <button class="btn btn-sm btn-outline btn-primary" style="margin: 0;" @click.stop="modelStyle.show=!modelStyle.show;getInfo(item)" v-show="item.ref_id">编辑</button>-->
+                        <button class="btn btn-sm btn-outline btn-primary" style="margin: 0;" @click.stop="getInfo(item)" v-if="shaiXuan.cat_type==1">预览</button>
+                        <button class="btn btn-sm btn-outline btn-primary" style="margin: 0;" @click.stop="modelShow=!modelShow;getInfo(item)" v-else>编辑</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr class="text-center">
+                      <td colspan="8"><span>暂无数据</span> </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>小程序</h5>详情</h5>
+
+                <!--<span class="label label-warning" v-if="detail.ref_id" style="margin-top: -4px;margin-left: 10px;" v-show="detail">自定义</span>-->
+                <!--<span class="label label-primary" v-else style="margin-top: -4px;margin-left: 10px;" v-show="detail">官方</span>-->
+            </div>
+            <div class="ibox-content article-content" v-if="detail">
+              <h3>{{detail.title}}</h3>
+              <div class="clearfix" style="color: #999;">
+                <div class="pull-left">
+                  {{detail.branch_name}}
+                </div>
+                <div class="pull-left" style="margin-left: 20px;">
+                  {{detail.show_time}}
+                </div>
+                <div class="pull-left" style="margin-left: 60px;">
+                  阅读数 {{detail.read_num}}
+                </div>
+              </div>
+              <div class="vidio_box" v-if="detail.video" style="margin-top:10px;">
+                  <video :src="detail.video" controls></video>
+                </div>
+              <div class="content" v-html="detail.detail" style="margin-top: 20px;height: 480px;overflow-y: auto;">
+
+              </div>
+            </div>
+            <div class="ibox-content" v-else>
+              <h4 class="text-center">暂无详情</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model_zcr" v-show="modelShow">
+        <div class="box" :style="modelStyle">
+          <div class="header clearfix" style="padding: 10px 20px;border-bottom:1px solid #e7e7e7;">
+            <div class="title pull-left">
+              <h4 style="display: inline-block;">文章编辑</h4>
+              <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+            </div>
+            <div class="close pull-right" @click.stop="modelShow=!modelShow"><i class="fa fa-close"></i></div>
+          </div>
+
+          <div class="content">
+            <form class="form-horizontal m-t" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">小程序名称：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="input-sm form-control" v-model="sendData.app_name">
+                        </input>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">支部名称：</label>
+                  <div class="col-sm-7">
+                      <input type="text" class="input-sm form-control" v-model="sendData.branch_name">
+                      </input>
+                  </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">负责人账户名：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="input-sm form-control" v-model="sendData.username">
+                        </input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">负责人姓名：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="input-sm form-control" v-model="sendData.user">
+                        </input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">负责人手机：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="input-sm form-control" v-model="sendData.phone">
+                        </input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">所在地区(三级联动)：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="input-sm form-control" v-model="sendData.region_code">
+                        </input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">详细地址：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="input-sm form-control" v-model="sendData.address">
+                        </input>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">备注：</label>
+                    <div class="col-sm-7">
+                      <textarea  class="form-control" rows="5" v-model="sendData.remark">
+                      </textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">过期时间：</label>
+                    <div class="col-sm-7">
+                        <input id="dete" type="text" class="input-sm form-control" v-model="sendData.expire_time">
+                        </input>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-4 col-sm-offset-3">
+                    <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+                    <button class="btn btn-white" type="button" id="btn-submit" @click="del()" v-show="Number(sendData.id)">删除</button>
+                  </div>
+                </div>
+              </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <script type="text/x-template" id="categoryselect">
+      <div>
+        <select class="input-sm form-control" id="category_se" v-model="check_val">
+          <option value="">请选择启用分类</option>
+          <option :value="cc.cat_id" v-for="cc in wx_region">{{cc.cat_name}}</option>
+        </select>
+      </div>
+    </script>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+    <!--<script src="__PUBLIC__/UE/ueditor.config.js"></script>-->
+    <!--<script src="__PUBLIC__/UE/ueditor.all.min.js"></script>-->
+    <!--<script src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>-->
+    <script src="__PUBLIC__/layer/layer.js"></script>
+    <script src="__PUBLIC__/layer/laydate/laydate.js"></script>
+    <script src="__PUBLIC__/aliyun-video/lib/es6-promise.min.js"></script>
+    <script src="__PUBLIC__/aliyun-video/lib/aliyun-oss-sdk.min.js"></script>
+    <script src="__PUBLIC__/aliyun-video/aliyun-vod-upload-sdk-1.2.0.min.js"></script>
+    <script src="__PUBLIC__/vue/vue.js"></script>
+    <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+    <script src="__PUBLIC__/ajaxApi/index.js"></script>
+    <script type="text/javascript">
+      var mol_sendData = {
+          app_name : '',
+          branch_name : '',
+          username : '',
+          user : '',
+          phone : '',
+          region_code : '',
+          address : '',
+          remark : '',
+          expire_time : '',
+      }
+      var VM = new Vue({
+        el: "#exapp",
+        data: {
+          pop_check:{
+            list:[]
+          },
+          sid:'',//是否推荐弹窗时选择的分类id
+          UE:'',
+          images:[],
+            video:[],
+          shaiXuan:{
+            keyword:"",
+            status:"",
+            is_hot:"",
+            cat_type:2
+          },
+          List: [],
+          detail: '',
+          sendData:JSON.parse(JSON.stringify(mol_sendData)),
+          clientWidth:document.documentElement.clientWidth,
+          modelShow:false
+        },
+        computed: {
+          modelStyle:function(){
+            return{
+              width_c:this.clientWidth,
+              height_c:document.documentElement.clientHeight,
+              width:this.clientWidth*0.9+'px',
+              height:document.documentElement.clientHeight*0.9+'px',
+              marginTop:-(document.documentElement.clientHeight*0.45)+'px',
+              marginLeft:-(this.clientWidth*0.45)+'px'
+            }
+          }
+        },
+        watch: {
+          'modelShow':function(nd){
+            var _this = this;
+            if(nd){
+              $(".model_zcr .content").animate({scrollTop: '0px'}, 200);
+              laydate.render({
+                elem: '#dete', //指定元素
+                calendar: true,
+               done:function(res){
+                _this.sendData.expire_time = res;
+                // console.log(res);
+                // console.log(_this.sendData);
+              }
+              });
+            }else{
+              layer.closeAll()
+            }
+          }
+        },
+        mounted: function() {
+          var _this = this
+          wx_region().then(function(res){
+            _this.pop_check.list = res.cat_list
+          })
+          this.getList();
+          this.initUE();
+          $(window).on('resize',function(){
+           _this.clientWidth = document.documentElement.clientWidth;
+           _this.initUE();
+          })
+        },
+        methods: {
+          // initUE:function(){
+          //   this.UE = UE.getEditor('ueditor',{
+          //       maximumWords:150000,
+          //       initialFrameWidth:'100%',
+          //       initialFrameHeight:400,
+          //       autoFloatEnabled:false,
+          //       autoHeight: false
+          //     }
+          //   )
+          // },
+          getList: function() {
+            var _this = this
+            this.$nextTick(function(){
+              switch (Number(_this.shaiXuan.cat_type)){
+              	case 1:
+              	specialWh(_this.shaiXuan).then(function(res){
+              	  fList(res)
+              	})
+              		break;
+                case 2:
+                    wxIndex(_this.shaiXuan).then(function(res){
+                  fList(res)
+                })
+                  break;
+              	default:
+              	 $.when(specialWh(_this.shaiXuan),specialIndex(_this.shaiXuan)).then(function(res1,res2){
+                    var res = {}
+                    res.List = res1.List.concat(res2.List)
+                    fList(res)
+                  })
+              		break;
+              }
+            })
+            var fList= function(res){
+              for(var len=res.List.length,i=0;i<len;i++){
+                res.List[i].show_time = new Date(Number(res.List[i].show_time)*1000).format("yyyy-MM-dd");
+//              res.List[i].is_hot = res.List[i].is_hot==1?true:false;
+//              res.List[i].status = res.List[i].status==1?true:false;
+              }
+              _this.$set(_this.$data, "List", res.List)
+            }
+          },
+          getInfo: function(item) { //回显，预览
+            // this.UE.setContent(item.detail);
+            this.$nextTick(function(){
+              Vue.set(this, "images", JSON.parse(JSON.stringify(item.images)));
+              Vue.set(this, "detail", JSON.parse(JSON.stringify(item)));
+              Vue.set(this, "sendData", JSON.parse(JSON.stringify(item)));
+            })
+          },
+          uploadPic: function() {
+            var _this = this
+            if(_this.images.length==9){
+              layer.msg('最多上传9张图片')
+              return
+            }
+            upload_public(function(res, file) { //上传完成时
+              _this.$set(_this.images, _this.images.length, res.link);
+            });
+          },
+            uploadVideo: function() {
+                var _this = this
+                if(_this.video.length==1){
+                    layer.msg('最多上传1个视频')
+                    return
+                }
+                video_public(function(res,id) { //上传完成时
+                    console.log(res);
+                    _this.$set(_this.video, _this.video.length, res);
+                    _this.$set(_this.sendData,'videonum', id);
+                });
+            },
+            delvideo:function(){
+                var _this = this
+                _this.video = [];
+                _this.sendData.videonum = '';
+                $('#jdt').html('');
+                $('#jdt').css('width','0');
+            },
+          previewimg:function(index,imgs){
+            var len = imgs.length,data=[];
+            for(var i=0;i<len;i++){
+              var obj = {};
+              obj.src = imgs[i];
+              obj.pid = i;
+              data.push(obj)
+            }
+            layer.photos({
+              photos: {
+                  "id": 123, //相册id
+                  "start": index, //初始显示的图片序号，默认0
+                  "data": data
+                }
+              ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+          },
+          switchHot:function(id,type){
+            var _this = this
+            specialSwitchHot({id:id,type:type}).then(function(res){
+              layer.msg(res.Message)
+              _this.getList()
+            })
+          },
+          switchStatus:function(id,type,index,List,refid){
+            var _this = this
+            var item = List[index]
+            var status = List[index].status
+            Vue.set(this, "sendData", JSON.parse(JSON.stringify(item)));
+            /* 组件 */
+            var checklist = {
+                template: '#categoryselect',
+                data: function(){
+                 return {
+                  wx_region:VM.$data.pop_check.list,
+                  check_val:item.cat_id
+                 }
+                },
+                watch: {
+                  check_val: function (d){
+                    this.$emit("success", d)
+                  }
+                }
+              }
+              /* 如果是取消不用传cat_id */
+            if(status==1){
+              specialSwitchStatus({id:id,type:type}).then(function(res){
+                layer.msg(res.Message)
+                _this.getList()
+              })
+              return
+            }
+            /* 如果是重新勾选则弹窗选择分类，传分类cat_id */
+            var popVM;
+            layer.open({title:'选择分类',
+            content:'<div id="checkpop"><checklist @success="check_end"></checklist></div>',
+            success: function(){
+              popVM = new Vue({el:'#checkpop', components:{'checklist':checklist}
+                ,data:{
+                  val: item.cat_id
+                }
+                ,methods:{
+                  check_end: function(val){
+                    this.val = val
+                  }
+                }
+              })
+            },
+            yes:function(windex){
+              var sval = popVM.$data.val
+              if(!sval){
+                layer.msg('操作失败，未选择分类！')
+                return
+              }
+              specialSwitchStatus({id:id,type:type,cat_id:sval,ref_id:refid}).then(function(res){
+                layer.msg(res.Message)
+                _this.getList()
+                layer.close(windex)
+              })
+
+            }})
+          },
+          add: function() {
+            this.images = [];
+            this.UE.setContent('');
+            this.sendData = JSON.parse(JSON.stringify(mol_sendData))
+          },
+          del: function() {
+            var _this = this
+            layer.confirm('是否删除此文章？', function(index) {
+              specialDel({
+                id: _this.sendData.id
+              }).then(function(res) {
+                layer.msg(res.Message)
+                layer.close(index)
+                _this.getList()
+              })
+            })
+          },
+          save: function() {
+            var _this = this;
+            // for(var len=_this.images.length,i=0;i<len;i++){
+            //   if(!_this.images[i]){
+            //     _this.images.splice(i,1);
+            //   }
+            // }
+            // this.sendData.detail = this.UE.getContent();
+            // this.sendData.images = _this.images.join(",");
+            this.$nextTick(function(){
+                wx_create_or_modify(_this.sendData).then(function(res) {
+                layer.msg(res.Message)
+                _this.getList()
+              });
+            })
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

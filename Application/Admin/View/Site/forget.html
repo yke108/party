@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>党建天地 - 忘记密码</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/login.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>
+        if(window.top!==window.self){window.top.location=window.location};
+    </script>
+	<style type="text/css">
+		body.signin{color:#676a6c;}
+		.signinpanel{ width:400px;}
+		body.signin{
+			background-image:url("{$login_background}");
+		}
+	</style>
+</head>
+
+<body class="signin">
+    <div class="signinpanel">
+		<form method="post" action="{:U('')}">
+			<p class="m-t-md">通过手机验证码快速重置密码</p>
+			<input id="phone" name="phone" type="text" class="form-control uname" placeholder="手机号" />
+			<p style="position:relative;">
+				<input id="code" name="code" type="text" class="form-control" placeholder="验证码" required="">
+				<a href='javascript:;' class='input-group-addon input-sm click_code get_code' style="position:absolute; right:1px; height:32px; top:1px; display:block; width:auto; border:none; padding:0 10px; background:#d22e2e; color:#FFF; line-height:34px; width:80px; border-radius:1px;">获取验证码</a>
+			</p>
+			<input id="password" name="password" type="password" class="form-control pword m-b" placeholder="新密码" />
+			<input id="password2" name="password2" type="password" class="form-control pword m-b" placeholder="确认密码" />
+			<p class="forgot-password"><a href="{:U('login')}">已经有账户了？点此登录</a></p>
+			<button type="button" class="btn btn-success btn-block" id="forget_btn">重置密码</button>
+			<input type="hidden" id="sms_id" name="sms_id" value="" />
+		</form>
+    </div>
+</body>
+
+
+
+</html>
+<style>
+.signinpanel{ position: absolute; top: 50%; left: 50%; margin: -207px 0 0 -200px;  background-color: #FFF;  box-shadow: 0 15px 30px rgba(0,0,0,.1);}
+.signinpanel form{ box-shadow: none !important; background-color: transparent !important;}
+.signinpanel form p.m-t-md{ text-align: center; color: #d22e2e; font-size: 24px; font-family: 'HWKT'; font-weight: bold;}
+.signinpanel form p.forgot-password{ text-align: right;}
+.signinpanel form p.forgot-password a{ color: #333;}
+.signinpanel form .btn-success{ background-color: #d22e2e; border-color: #d22e2e;}
+.signinpanel form .btn-success:active{ background-color: #c00000; border-color: #c00000;}
+.signinpanel form .btn-success:active:hover{ background-color: #ae0000; border-color: #ae0000;}
+.signinpanel form input{ margin-top: 20px !important; border-radius: 5px;}
+.signinpanel form input:focus{ border-color: #d22e2e !important; box-shadow: 0 0 10px #ffc2c2;}
+</style>
+<script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/layer/layer.js"></script>
+<script>
+	var second=60;
+	var init_second=60;
+	var not_send_sms=false;
+	
+	$(".click_code").bind("click",function(e){
+		var stop_count='';
+		
+		if(not_send_sms==false){
+		//发送短信的程序↓
+		//alert('发送短信')
+		var phone = $('#phone').val();
+		var obj = $(this);
+		$.post('{:U("getForgetCode")}',{phone:phone},function(d){
+			console.log(d);
+			if(d.status == 1){
+				$('#sms_id').val(d.sms_id)
+				layer.msg(d.info, {
+					icon: 1,
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				});
+			}else{
+				layer.msg(d.info, {
+					icon: 2,
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				});
+				not_send_sms=false
+				window.clearInterval(stop_count);
+				$(".get_code").removeClass('active').addClass('click_code').html('获取验证码');
+				second=init_second;
+			}
+		},'json');
+		//发送短信的程序↑
+		}else{
+			return ;
+		}
+		
+		not_send_sms=true;
+		stop_count=window.setInterval(function(){
+			$(".get_code").addClass('active').removeClass('click_code').html(second+"S");
+			second--;
+			if(second<0){
+				not_send_sms=false
+				window.clearInterval(stop_count);
+				$(".get_code").removeClass('active').addClass('click_code').html('获取验证码');
+				second=init_second;
+			}
+		},1000)
+	})
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#forget_btn').bind('click',function(){
+		var form = $(this).parents('form');
+		$.post(form.attr('action'),form.serialize(),function(d){
+			if(d.status == 1){
+				layer.msg(d.info, {
+					icon: 1,
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				}, function(){
+					window.location.href = d.url;
+				});
+			}else{
+				layer.msg(d.info, {
+					icon: 2,
+					time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				}, function(){
+					
+				});
+			}
+		},'json');
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from www.zi-han.net/theme/hplus/login_v2.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:19:49 GMT -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>党建天地 - 登录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/login.min.css" rel="stylesheet">
+	<style type="text/css">
+		body.signin{color:#676a6c;}
+		.signinpanel{ width:400px;}
+        body.signin{
+            background-image:url("{$login_background}");
+        }
+	</style>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <script>
+        if(window.top!==window.self){window.top.location=window.location};
+        function Login(event){
+	        if (event.keyCode==13){
+		        document.getElementById("login").click();
+            }
+        }
+    </script>
+
+</head>
+
+<body class="signin" onkeydown="Login(event);">
+    <div class="signinpanel">
+        <form method="post" action="{:U('dologin')}">
+			<p class="m-t-md">{$city}党建天地后台</p>
+			<input type="text" name="mobile" class="form-control uname" placeholder="手机号" />
+			<input type="password" name="password" class="form-control pword m-b" placeholder="密码" />
+			<p class="forgot-password"><a href="{:U('forget')}">忘记密码？</a></p>
+			<button type="button" class="btn btn-success btn-block" id="login">登录</button>
+		</form>
+    </div>
+</body>
+
+
+</html>
+<style>
+    .signinpanel{ width: 370px; height: 330px; position: absolute; top: 50%; left: 50%; margin: -165px 0 0 -185px; background-color: #FFF;  box-shadow: 0 15px 30px rgba(0,0,0,.1);}
+    .signinpanel form{ box-shadow: none !important; background-color: transparent !important;}
+    .signinpanel form p.m-t-md{ text-align: center; color: #d22e2e; font-size: 24px; font-family: 'HWKT'; font-weight: bold;}
+    .signinpanel form p.forgot-password{ text-align: right;}
+    .signinpanel form p.forgot-password a{ color: #333;}
+    .signinpanel form .btn-success{ background-color: #d22e2e; border-color: #d22e2e;}
+    .signinpanel form .btn-success:active{ background-color: #c00000; border-color: #c00000;}
+    .signinpanel form .btn-success:active:hover{ background-color: #ae0000; border-color: #ae0000;}
+    .signinpanel form input{ margin-top: 20px !important; border-radius: 5px;}
+    .signinpanel form input:focus{ border-color: #d22e2e !important; box-shadow: 0 0 10px #ffc2c2;}
+</style>
+<script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/layer/layer.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#login').bind('click',function(){
+		var form = $(this).parents('form');
+		if($('input[name=mobile]').val()=='' && $('input[name=password]').val()==''){
+			$('input[name=mobile]').focus()
+			return
+		}
+		if($('input[name=mobile]').val()==''){
+			$('input[name=mobile]').focus()
+            return
+		}
+		if($('input[name=password]').val()==''){
+			$('input[name=password]').focus()
+			return
+		}
+		$.post(form.attr('action'),form.serialize(),function(d){
+			layer.msg(d.info, {
+				icon: 1,
+				time: 1000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				if(d.status == 1){
+					window.location.href = "{:U('index/index')}";
+				}
+			});
+		},'json');
+		return false;
+	});
+});
+</script>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+  </head>
+  <style type="text/css">
+    [v-cloak]{display:none}
+.pointer{cursor:pointer}
+.category_img{width:100% !important;height:auto !important;vertical-align: middle;border-radius:0 !important;}
+.client-avatar{width:42px;height:42px;line-height:38px;display:inline-block;border-radius:50%;border:1px solid #f0f0f0;overflow:hidden;text-align:center;vertical-align:middle;background: #fff;}
+.client-avatar.plus{width:80px;height:80px;line-height:76px;margin-bottom:10px}
+.radio label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-144px 6px}
+.radio label.checked:before{background-position:-168px 6px}
+.btn-tools{position:absolute;top:50%;margin-top:-7px;right:0}
+  </style>
+
+  <body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak>
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5>分类列表</h5>
+              <div class="ibox-tools">
+                <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="add()">新增</button>
+              </div>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <!--<div class="col-sm-8">
+                  <form>
+                    <div class="input-group">
+                      <input type="text" name="keyword" v-model="search" placeholder="请输入关键词" class="input-sm form-control">
+                      <span class="input-group-btn"><button type="button" class="btn btn-sm btn-primary" @click="searchItem(search)">搜索</button></span>
+                    </div>
+                  </form>
+                </div>-->
+              </div>
+              <div :style="{maxHeight: modelStyle.height_c*0.8+'px',overflowY: 'auto'}">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th>类型</th>
+                      <th style="text-align: center;">分类</th>
+                      <!--<th>简介</th>-->
+                      <th style="text-align: center;">排序</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="List">
+                    <tr @click="getInfo(item)" v-for="(item,index) in List" class="pointer">
+                      <td>
+                        <span class="label label-primary" v-if="Number(item.ref_id)">官方</span>
+                        <span class="label label-warning" v-else>自定义</span>
+                      </td>
+                      <td>
+                        <div class="client-avatar">
+                          <img alt="图片" :src="item.icon_url" class="category_img" v-if="item.icon_url"/>
+                          <img class="category_img" src="/public/img/default.svg" v-else/>
+                        </div>
+                        <span style="display: inline-block;margin-left: 5px;">{{item.cat_name}}</span>
+                      </td>
+                      <!--<td>{{item.desc}}</td>-->
+                      <td style="text-align: center;">{{item.sort}}</td>
+                      <td><span class="label" :class="{'label-success':item.status==1,'label-danger':item.status==2}">{{item.status_label}}</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline btn-primary" style="margin: 0;" v-if="Number(item.ref_id)">编辑</button>
+                        <button class="btn btn-sm btn-outline btn-primary" style="margin: 0;" v-else>编辑</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody v-else>
+                    <tr class="text-center">
+                      <td colspan="5"><span>暂无数据</span> </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5 v-if="Number(detail.ref_id)">{{detail.cat_name}}</h5>
+              <h5 v-else-if="!detail.ref_id">添加自定义义分类</h5>
+              <h5 v-else>编辑分类</h5>
+            </div>
+            <div class="ibox-content">
+              <form class="form-horizontal m-t">
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">图标：</label>
+                  <div class="col-sm-7">
+                    <!--dom结构部分-->
+                    <div id="uploader-demo">
+                      <!--用来存放item-->
+                      <div id="fileList" class="uploader-list">
+                        <div class="client-avatar plus">
+                          <img alt="图片" :src="Pic" class="category_img" v-if="detail.icon">
+                          <img alt="图片" src="/public/img/default.svg" class="category_img" v-else>
+                        </div>
+                      </div>
+                      <div id="filePicker" v-if="!Number(detail.ref_id)">
+                        <button type="button" class="btn btn-outline btn-warning" @click="uploadPic()">上传图标</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">类型：</label>
+                  <div class="col-sm-7">
+                      <span class="label label-primary" v-if="Number(detail.ref_id)">官方</span>
+                      <span class="label label-warning" v-else>自定义</span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">分类名称：</label>
+                  <div class="col-sm-7">
+                    <input name="cat_name" minlength="2" type="text" class="form-control" required="" aria-required="true" v-model="detail.cat_name" disabled="true" v-if="Number(detail.ref_id)">
+                    <input name="cat_name" minlength="2" type="text" class="form-control" required="" aria-required="true" v-model="detail.cat_name" v-else>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">简介：</label>
+                  <div class="col-sm-7">
+                    <textarea name="desc" class="form-control" required="" aria-required="true" v-model="detail.desc" disabled="true" v-if="Number(detail.ref_id)"></textarea>
+                    <textarea name="desc" class="form-control" required="" aria-required="true" v-model="detail.desc" v-else></textarea>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">排序：</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" name="sort" v-model="detail.sort" disabled="true" v-if="Number(detail.ref_id)">
+                    <input type="text" class="form-control" name="sort" v-model="detail.sort" v-else>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-3 control-label">状态：</label>
+                  <div class="col-sm-7">
+                    <div class="radio" style="display: inline-block;">
+                      <label class="myradio" :class="{checked:detail.status==1}"><input type="radio" :value="1" v-model="detail.status" v-show="false" @click="Number(detail.ref_id)&&detail.cat_name&&statusChange(detail.ref_id)"> 启用</label>
+                    </div>
+                    <div class="radio" style="display: inline-block;">
+                      <label class="myradio" :class="{checked:detail.status==2}"><input type="radio" :value="2"  v-model="detail.status" v-show="false" @click="Number(detail.ref_id)&&detail.cat_name&&statusChange(detail.ref_id)"> 关闭</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="col-sm-4 col-sm-offset-3">
+                    <button class="btn btn-primary" type="button" id="btn-submit" @click="copy()" v-if="Number(detail.ref_id)" v-show="false"></button>
+                    <button class="btn btn-primary" type="button" id="btn-submit" @click="save()" v-else-if="!detail.ref_id||!detail.cat_id">新增</button>
+                    <span v-else>
+                      <button class="btn btn-primary" type="button" id="btn-submit" @click="save()" >修改</button>
+                      <button class="btn btn-white" type="button" id="btn-submit" @click="del()" style="margin-left: 20px;">删除</button>
+                    </span>
+
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+    <script src="__PUBLIC__/layer/layer.js"></script>
+    <script src="__PUBLIC__/vue/vue.js"></script>
+    <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+    <script src="__PUBLIC__/ajaxApi/index.js"></script>
+    <script type="text/javascript">
+      var mol_detail = {
+        cat_name: '',
+        desc: '',
+        status: 2
+      };
+      new Vue({
+        el: "#exapp",
+        data: {
+          Pic: "",
+          List: "",
+          detail: JSON.parse(JSON.stringify(mol_detail)),
+          modelStyle:{
+            width_c:document.documentElement.clientWidth,
+            height_c:document.documentElement.clientHeight
+          }
+        },
+        watch: {},
+        mounted: function() {
+          this.getList();
+        },
+        methods: {
+          getList: function() {
+            var _this = this
+            categorySpecial().then(function(res) {
+              _this.$set(_this.$data, "List", res.cat_list)
+            })
+          },
+          getInfo: function(item) {
+            this.Pic = item.icon_url
+            Vue.set(this, "detail", JSON.parse(JSON.stringify(item)))
+          },
+          statusChange: function(id) {
+            let _this = this
+            categorySwitchStatus({ref_id:id}).then(function(res){
+              layer.msg(res.Message)
+              _this.getList()
+            })
+          },
+          uploadPic: function() {
+            let _this = this
+            upload_public(function(res, file) { //上传完成时
+              _this.$set(_this, 'Pic', res.link);
+              _this.$set(_this.detail, 'icon', res.url);
+            });
+          },
+          copy:function(){
+            this.detail.ref_id = '0'
+            this.detail.cat_id = ''
+          },
+          add: function() {
+            this.detail = JSON.parse(JSON.stringify(mol_detail))
+          },
+          del: function() {
+            let _this = this
+            layer.confirm('是否删除此分类？', function(index) {
+              categoryDel({
+                cat_id: _this.detail.cat_id
+              }).then(function(res) {
+                layer.msg(res.Message)
+                layer.close(index)
+                _this.getList()
+              })
+            })
+          },
+          save: function() {
+            let _this = this
+            categoryCreate_or_modify_special(this.detail).then(function(res) {
+              layer.msg(res.Message)
+              _this.getList()
+            })
+          }
+        }
+      })
+    </script>
+  </body>
+</html>

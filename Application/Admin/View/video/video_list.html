@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/layer/layui/css/layui.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/elementui/theme-chalk/index.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/mycomm1.css" rel="stylesheet">
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 class="clearfix">视频列表</h5>
+                    <div class="pull-left">
+                        <div class="radio private">
+                            <label :class="{checked:shaiXuan.cat_type==1}" @click="shaiXuan.cat_type=1;getList()"> 官方</label>
+                            <label :class="{checked:shaiXuan.cat_type==2}" @click="shaiXuan.cat_type=2;getList()"> 自定义</label>
+                        </div>
+                    </div>
+                    <div class="ibox-tools">
+                        <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="modelShow=!modelShow;add()">新增</button>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="input-group">
+                                <input type="text" name="keyword" v-model="shaiXuan.keyword" placeholder="请输入关键词" class="form-control">
+                                <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="getList()">搜索</button></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">状态</span>
+                                <select type="text" class="form-control" v-model="shaiXuan.status" @change="getList()">
+                                    <option value="">请选择状态</option>
+                                    <option value="1">开启</option>
+                                    <option value="2">关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div :style="{maxHeight:modelStyle.height_c*0.8 + 'px',overflowY: 'auto'}">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                            <tr>
+                                <th colspan="3" style="text-align: center;">视频</th>
+                                <th style="text-align: center;" v-if="shaiXuan.cat_type==2">阅读数</th>
+                                <th style="text-align: center;">是否启用</th>
+                                <th style="text-align: center;"  v-if="shaiXuan.cat_type==2">排序</th>
+                                <th style="text-align: center;">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody v-if="List.length">
+                            <tr @click="getInfo(item)" v-for="(item,index) in List" class="pointer">
+                                <td width="40">
+                                    <span class="label label-primary" v-if="item.ref_id!=0">官方</span>
+                                    <span class="label label-warning" v-else>自定义</span>
+                                </td>
+                                <td width="42">
+                                    <div class="client-avatar">
+                                        <img alt="图片" :src="item.image" class="category_img" v-if="item.image"/>
+                                        <img class="category_img" src="/public/img/default.svg" v-else/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: inline-block;font-size: 14px;margin-bottom: 5px;">{{item.title}}</div>
+                                    <div class="clearfix" style="color: #999;">
+                                        <div class="pull-left">
+                                            {{item.refer}}
+                                        </div>
+                                        <div class="pull-left" style="margin-left: 5px;">
+                                            {{item.add_time}}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="center"  v-if="shaiXuan.cat_type==2">{{item.read_num}}</td>
+                                <!--是否启用-->
+                                <td align="center">
+                                    <div class="checkbox">
+                                        <label :class="{checked:item.status==1}" @click.stop="switchStatus(item.id,shaiXuan.cat_type,index,List,item.ref_id)">
+                                            <input type="checkbox"
+                                                   v-bind:true-value="'1'"
+                                                   v-bind:false-value="'2'"
+                                                   v-model="item.status"
+                                                   v-show="false"
+                                                   disabled
+                                            />
+                                        </label>
+                                    </div>
+                                </td>
+                              
+                                <td width="70"  v-if="shaiXuan.cat_type==2"><input type="number" class="input-sm form-control text-center" min="0" v-model="item.sort" @change="getInfo(item);save();"/></td>
+                                
+                                <td align="center" @click.stop>      
+                                  <el-dropdown @command="handleCommand">
+                                    <el-button type="primary" size="small">
+                                      操作菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                                    </el-button>
+                                    <el-dropdown-menu slot="dropdown">
+                                      <el-dropdown-item :command="0,item" v-if="shaiXuan.cat_type==2&&item.is_option==0">设为任务</el-dropdown-item>
+                                      <el-dropdown-item :command="1,item" v-if="shaiXuan.cat_type==1">预览</el-dropdown-item>
+                                      <el-dropdown-item :command="2,item" v-else>编辑</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                  </el-dropdown>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tbody v-else>
+                            <tr class="text-center">
+                                <td colspan="7"><span>暂无数据</span> </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>视频详情</h5>
+                    <span class="label label-warning" v-if="detail.ref_id==0" style="margin-top: -4px;margin-left: 10px;" v-show="detail">自定义</span>
+                    <span class="label label-primary" v-else style="margin-top: -4px;margin-left: 10px;" v-show="detail">官方</span>
+                </div>
+                <div class="ibox-content article-content" v-if="detail">
+                    <h3>{{detail.title}}</h3>
+                    <div class="clearfix" style="color: #999;">
+                        <div class="pull-left">
+                            {{detail.refer}}
+                        </div>
+                        <div class="pull-left" style="margin-left: 20px;">
+                            添加时间：{{detail.add_time}}
+                        </div>
+                        <div class="pull-left" style="margin-left: 60px;">
+                            阅读数:{{detail.read_num}}
+                        </div>
+                    </div>
+                    <div class="vidio_box" v-if="detail.video" style="margin-top:10px;">
+                        <video :src="detail.video" controls style="height:200px;"></video>
+                    </div>
+                    <div class="content" v-html="detail.detail" style="margin-top: 20px;height: 480px;overflow-y: auto;">
+
+                    </div>
+                </div>
+                <div class="ibox-content" v-else>
+                    <h4 class="text-center">暂无详情</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="model_zcr" v-show="modelShow">
+        <div class="box" :style="modelStyle">
+            <div class="header clearfix" style="padding: 10px 20px;border-bottom:1px solid #e7e7e7;">
+                <div class="title pull-left">
+                    <h4 style="display: inline-block;">文章编辑</h4>
+                    <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+                </div>
+                <div class="close pull-right" @click.stop="modelShow=!modelShow"><i class="fa fa-close"></i></div>
+            </div>
+
+            <div class="content">
+                <form class="form-horizontal m-t" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">分类：</label>
+                        <div class="col-sm-7">
+                            <select class="input-sm form-control" v-model="sendData.cat_id">
+                                <option value="">请选择分类</option>
+                                <option :value="cc.cat_id" v-for="cc in videoCategory">{{cc.cat_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">标题：</label>
+                        <div class="col-sm-7">
+                            <input type="text" class="input-sm form-control" v-model="sendData.title">
+                            </input>
+                        </div>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">排序：</label>
+                        <div class="col-sm-7">
+                            <input type="number" class="input-sm form-control" v-model="sendData.sort">
+                            </input>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">状态：</label>
+                        <div class="col-sm-7">
+                            <div class="radio">
+                                <label class="myradio" :class="{checked:sendData.status==1||sendData.status==true}"><input type="radio" value="1" v-model="sendData.status" v-show="false" > 开启</label>
+                                <label class="myradio" :class="{checked:sendData.status==2||sendData.status==false}" style="margin-left: 10px;"><input type="radio" value="2"  v-model="sendData.status" v-show="false" > 关闭</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">简介：</label>
+                        <div class="col-sm-7">
+                      <textarea  class="form-control" rows="5" v-model="sendData.desc">
+                      </textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">系列图：</label>
+                        <div class="col-sm-7 upload">
+                            <div class="lightBoxGallery" v-if="image.length">
+                                <div class="image_box" v-for="(item,index) in image">
+                                    <span class="image_close" @click.stop="image.splice(index,1)">x</span>
+                                    <img :src="item" alt="" @click.stop="previewimg(index,image)" style="cursor: pointer;"/>
+                                </div>
+                            </div>
+                            <div id="filePicker" style="margin-top: 10px;">
+                                <button type="button" class="btn btn-outline btn-warning" @click="uploadPic()">上传图片</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">视频上传：</label>
+                        <div class="col-sm-7 upload">
+                            <div class="lightBoxGallery" v-if="sendData.video.length">
+                                <div class="image_box" v-for="(item,index) in sendData.video">
+                                    <!--<span class="image_close" @click.stop="image.splice(index,1)">x</span>-->
+                                    <!--<img :src="item" alt="" @click.stop="previewimg(index,image)" style="cursor: pointer;"/>-->
+                                    <button class="btn btn-danger del-video" type="button" @click="delvideo()" style="vertical-align: top; border-radius: 50%; margin-left: auto; position: relative; z-index: 10;float:right">X</button>
+                                    <video  controls=""  :src="item" width="300" height="200" style="margin: 10px 0 0; vertical-align: top;height:200px!important;"></video>
+                                </div>
+                            </div>
+                            <div id="filePicker" style="margin-top: 10px;">
+                                <div class="col-md-7" style="padding: 0;">
+                                    <button type="button" class="btn btn-outline btn-warning" @click="uploadVideo()">视频上传</button>
+                                </div>
+                                <div class="col-md-5" style="padding: 0;">
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="jdt">0 %</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">详情：</label>
+                        <div class="col-sm-7">
+                            <textarea id="ueditor" v-model="sendData.detail"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-3">
+                            <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+                            <button class="btn btn-white" type="button" id="btn-submit" @click="del()" v-show="Number(sendData.id)">删除</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script type="text/x-template" id="categoryselect">
+    <div>
+        <select class="input-sm form-control" id="category_se" v-model="val">
+            <option value="">请选择启用分类</option>
+            <option :value="cc.cat_id" v-for="cc in specialCategory">{{cc.cat_name}}</option>
+        </select>
+    </div>
+</script>
+
+<script type="text/x-template" id="taskform">
+    <form class="form-horizontal m-t">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">是否重要：</label>
+          <div class="col-sm-7">
+            <div class="radio">
+              <label class="myradio" :class="{checked:reqData.importent_status==1}" @click="reqData.importent_status=1"> 是</label>
+              <label class="myradio" :class="{checked:reqData.importent_status==0}" @click="reqData.importent_status=0" style="margin-left: 10px;"> 否</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">截止时间：</label>
+          <div class="col-sm-7">
+            <input type="text" class="layui-input" v-laydate="{'sendData':reqData}">
+          </div>
+        </div>
+    </form>
+</script>
+<script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+<script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+<script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+<script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+<script src="__PUBLIC__/UE/ueditor.config.js"></script>
+<script src="__PUBLIC__/UE/ueditor.all.min.js"></script>
+<script src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>
+<script src="__PUBLIC__/layer/layui/layui.all.js"></script>
+<script src="__PUBLIC__/aliyun-video/lib/es6-promise.min.js"></script>
+<script src="__PUBLIC__/aliyun-video/lib/aliyun-oss-sdk.min.js"></script>
+<script src="__PUBLIC__/aliyun-video/aliyun-vod-upload-sdk-1.2.0.min.js"></script>
+<script src="__PUBLIC__/vue/vue.js"></script>
+<script src="__PUBLIC__/elementui/index.js"></script>
+<script src="__PUBLIC__/ajaxApi/comm.js"></script>
+<script src="__PUBLIC__/ajaxApi/index.js"></script>
+<script type="text/javascript">
+    var mol_sendData = {
+        cat_id:'',
+        title:'',
+        refer:'',
+        desc:'',
+        keywords:'',
+        detail:'',
+        sort:'',
+        is_hot:1,
+        image:'',
+        status:1,
+        add_time:'',
+        video:[],
+        videonum:''
+    }
+    var VM =  new Vue({
+        el: "#exapp",
+        data: {
+            videoCategory:[],
+            sid:'',//是否推荐弹窗时选择的分类id
+            UE:'',
+            image:[],
+            shaiXuan:{
+                keyword:"",
+                status:"",
+                is_hot:"",
+                cat_type:2
+            },
+            List: [],
+            detail: '',
+            sendData:JSON.parse(JSON.stringify(mol_sendData)),
+            clientWidth:document.documentElement.clientWidth,
+            modelShow:false
+        },
+        computed: {
+            modelStyle:function(){
+                return{
+                    width_c:this.clientWidth,
+                    height_c:document.documentElement.clientHeight,
+                    width:this.clientWidth*0.9+'px',
+                    height:document.documentElement.clientHeight*0.9+'px',
+                    marginTop:-(document.documentElement.clientHeight*0.45)+'px',
+                    marginLeft:-(this.clientWidth*0.45)+'px'
+                }
+            }
+        },
+        watch: {
+            'modelShow':function(nd){
+                var _this = this;
+                if(nd){
+                    $(".model_zcr .content").animate({scrollTop: '0px'}, 200);
+                    laydate.render({
+                        elem: '#dete', //指定元素
+                        calendar: true,
+                        done:function(res){
+                            _this.sendData.add_time = res;
+                            // console.log(res);
+                            // console.log(_this.sendData);
+                        }
+                    });
+                }else{
+                    layer.closeAll()
+                }
+            }
+        },
+        mounted: function() {
+            var _this = this
+            videoCategory().then(function(res){
+                _this.videoCategory = res.cat_list
+            })
+            this.getList();
+            this.initUE();
+            $(window).on('resize',function(){
+                _this.clientWidth = document.documentElement.clientWidth;
+                _this.initUE();
+            })
+        },
+        methods: {
+            initUE:function(){
+                this.UE = UE.getEditor('ueditor',{
+                        maximumWords:150000,
+                        initialFrameWidth:'100%',
+                        initialFrameHeight:400,
+                        autoFloatEnabled:false,
+                        autoHeight: false
+                    }
+                )
+            },
+            getList: function() {
+                var _this = this
+                this.$nextTick(function(){
+                    switch (Number(_this.shaiXuan.cat_type)){
+                        case 1:
+                            videoWh(_this.shaiXuan).then(function(res){
+                                fList(res)
+                            })
+                            break;
+                        case 2:
+                            videoIndex(_this.shaiXuan).then(function(res){
+                                fList(res)
+                            })
+                            break;
+                    }
+                })
+                var fList= function(res){
+                    for(var len=res.List.length,i=0;i<len;i++){
+                        // res.List[i].add_time = new Date(Number(res.List[i].add_time)*1000).format("yyyy-MM-dd");
+//              res.List[i].is_hot = res.List[i].is_hot==1?true:false;
+//              res.List[i].status = res.List[i].status==1?true:false;
+                    }
+                    _this.$set(_this.$data, "List", res.List)
+                }
+            },
+            handleCommand: function(command,child){
+              /**
+               * 下拉菜单点击事件
+               * */
+              var item = child.$attrs.item
+              switch (Number(command)){
+              	case 0:
+              	this.setTask(item)
+            		break;
+            		case 1:
+            		this.getInfo(item)
+                break;
+                case 2:
+                this.modelShow=!this.modelShow;
+                this.getInfo(item)
+                break;
+              }
+            },
+            setTask:function(item){
+              /**任务设置弹窗
+               * */
+              var _this = this,taskVm
+              var openOpt = {
+                id:"taskpopwrap",
+                area:["500px","300px"],
+                title:"任务设置",
+                content:'<div id="taskpop">'+$("#taskform").html()+'</div>',
+                success:function(){
+                  taskVm = new Vue({
+                    el:'#taskpop',
+                    data:{
+                      reqData:{
+                        type:'103',
+                        content_id:item.id,
+                        study_time:new Date().format('yyyy-MM-dd'),
+                        importent_status:'0'
+                      }
+                    }
+                  })
+                },
+                yes:function(inx){
+                  var sd = taskVm.$data.reqData
+                  tools_optionadd(sd).then(function(res){
+                    layer.msg(res.Message)
+                    _this.getList()
+                    layer.close(inx)
+                  }) 
+                }
+              }
+              layer.open(openOpt)
+            },
+            getInfo: function(item) { //回显，预览
+                this.UE.setContent(item.detail);
+                this.$nextTick(function(){
+                    Vue.set(this, "image", JSON.parse(JSON.stringify(item)).image);
+                    Vue.set(this, "detail", JSON.parse(JSON.stringify(item)));
+                    Vue.set(this, "sendData", JSON.parse(JSON.stringify(item)));
+                })
+            },
+            uploadPic: function() {
+                var _this = this
+                if(_this.image.length==9){
+                    layer.msg('最多上传9张图片')
+                    return
+                }
+                upload_public(function(res, file) { //上传完成时
+                    _this.$set(_this.image, _this.image.length, res.link);
+                });
+            },
+            uploadVideo: function() {
+                var _this = this
+                if(_this.sendData.video.length==1){
+                    layer.msg('最多上传1个视频')
+                    return
+                }
+                video_public(function(res,id) { //上传完成时
+                    _this.$set(_this.sendData.video, _this.sendData.video.length, res);
+                    _this.$set(_this.sendData,'videonum', id);
+                });
+            },
+            delvideo:function(){
+                var _this = this
+                _this.sendData.video = [];
+                _this.sendData.videonum = '';
+                $('#jdt').html('');
+                $('#jdt').css('width','0');
+            },
+            previewimg:function(index,imgs){
+                var len = imgs.length,data=[];
+                for(var i=0;i<len;i++){
+                    var obj = {};
+                    obj.src = imgs[i];
+                    obj.pid = i;
+                    data.push(obj)
+                }
+                layer.photos({
+                    photos: {
+                        "id": 123, //相册id
+                        "start": index, //初始显示的图片序号，默认0
+                        "data": data
+                    }
+                    ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+                });
+            },
+            switchHot:function(id,type){
+                var _this = this
+                articleSwitchHot({id:id,type:type}).then(function(res){
+                    layer.msg(res.Message)
+                    _this.getList()
+                })
+            },
+            switchStatus:function(id,type,index,List,refid){
+                var _this = this
+                var item = List[index]
+                var status = List[index].status
+                Vue.set(this, "sendData", JSON.parse(JSON.stringify(item)));
+                /* 如果是取消不用传cat_id */
+                if(status==1){
+                    videoSwitchStatus({id:id,type:type}).then(function(res){
+                        layer.msg(res.Message)
+                        _this.getList()
+                    })
+                    return
+                }
+                /* 如果是重新勾选则弹窗选择分类，传分类cat_id */
+                var popVM;
+                  layer.open({
+                    title: '选择分类',
+                    content: '<div id="checkpop">' + $('#categoryselect').html() + '</div>',
+                    success: function() {
+                      popVM = new Vue({
+                        el: '#checkpop',
+                        data: {
+                          val: type == 1 ? '' : item.cat_id,
+                          specialCategory: JSON.parse(JSON.stringify(_this.videoCategory))
+                        }
+                      })
+                    },
+                    yes: function(windex) {
+                      var sval = popVM.$data.val
+                      if(!sval) {
+                        layer.msg('操作失败，未选择分类！')
+                        return
+                      }
+                      videoSwitchStatus({
+                        id: id,
+                        cat_id: sval,
+                        ref_id: refid,
+                        type: type
+                      }).then(function(res) {
+                        layer.msg(res.Message)
+                        _this.getList()
+                        layer.close(windex)
+                      })
+                    }
+                  })
+            },
+            add: function() {
+                this.image = [];
+                this.UE.setContent('');
+                this.sendData = JSON.parse(JSON.stringify(mol_sendData))
+            },
+            del: function() {
+                var _this = this
+                layer.confirm('是否删除此视频？', function(index) {
+                    videoDel({
+                        id: _this.sendData.id
+                    }).then(function(res) {
+                        layer.msg(res.Message)
+                        layer.close(index)
+                        _this.getList()
+                    })
+                })
+            },
+            save: function() {
+                var _this = this;
+                for(var len=_this.image.length,i=0;i<len;i++){
+                    if(!_this.image[i]){
+                        _this.image.splice(i,1);
+                    }
+                }
+                this.sendData.detail = this.UE.getContent();
+                this.sendData.image = _this.image.join(",");
+                this.$nextTick(function(){
+                    video_create_or_modify(_this.sendData).then(function(res) {
+                        layer.msg(res.Message)
+                        _this.getList()
+                    });
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

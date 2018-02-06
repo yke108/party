@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <!-- Mirrored from www.zi-han.net/theme/hplus/table_basic.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 20 Jan 2016 14:20:01 GMT -->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/elementui/theme-chalk/index.css" rel="stylesheet">
+  </head>
+  <style type="text/css">
+    [v-cloak]{display:none}
+    .pointer{cursor:pointer}
+    .category_img{width:100% !important;height:auto !important;vertical-align: middle;border-radius:0 !important;}
+    .client-avatar{width:42px;height:42px;line-height:38px;display:inline-block;border-radius:8px;border:1px solid #f0f0f0;overflow:hidden;text-align:center;background: #fff;}
+    .client-avatar.plus{width:80px;height:80px;margin-bottom:10px}
+    .label{user-select: none;-ms-user-select: none;-webkit-user-select: none;-moz-user-select: none;}
+    .radio label{position: relative;}
+    .radio label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .radio label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-144px 0px;}
+    .radio label.checked:before{background-position:-168px 0px}
+    .radio.private{ margin: 0;margin-left: 10px;}
+    .radio.private label{margin-left: 20px;}
+    .checkbox label{position: relative;}
+    .checkbox label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .checkbox label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-24px 0px;}
+    .checkbox label.checked:before{background-position:-48px 0px}
+    .checkbox.private{ margin: 0;margin-left: 10px;}
+    .checkbox.private label{margin-left: 20px;font-size: 16px;}
+    .btn-tools{position:absolute;top:50%;margin-top:-7px;right:0}
+    .article-content *{max-width: 100%;word-break: break-all;}
+
+    .model_zcr{background: rgba(0,0,0,0.6);position: fixed;top: 0;bottom: 0;left: 0;right: 0;z-index: 19901110;}
+    .model_zcr .box{background: #fff;position: absolute;top: 50%;left: 50%;overflow: hidden;padding-bottom: 20px;}
+    .model_zcr .content{height: calc(100% - 50px);overflow-y: auto;overflow-x: hidden;}
+
+    select.input-sm{height: 32px !important;line-height: 25px !important;}
+
+    .images_box{display: inline-block;border: 1px solid  #e7e7e7;border-radius: 4px;position: relative;}
+    .images_box:nth-child(n+1){margin-left: 10px;}
+    .images_box .images_close{width:20px;height:20px;color: #fff;background:#ed5666;position: absolute;top: -6px;right: -6px;border-radius: 50%;}
+    .images_box .images_close{line-height: 20px;text-align: center;z-index: 1;cursor: pointer;}
+    .images_box img{margin: 5px;width: 130px;height: auto;vertical-align: middle;}
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    input[type="number"]{
+      -moz-appearance: textfield;
+    }
+
+    .el-input.is-active .el-input__inner,.el-input__inner:focus{border-color: #1ab349;}
+    .el-input__inner{border-radius: 0;}
+  </style>
+
+  <body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5 class="clearfix">支部组列表</h5>
+
+              <div class="ibox-tools" v-if="isnew==1">
+                <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="addData()">新增</button>
+              </div>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="input-group">
+                      <input type="text" name="keyword" v-model="tbdata.shaiXuan.keyword" placeholder="请输入关键词" class="form-control">
+                      <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="initTableData()">搜索</button></span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="input-group">
+                      <span class="input-group-addon">状态</span>
+                      <select type="text" class="form-control" v-model="tbdata.shaiXuan.status" @change="initTableData()">
+                        <option value="">请选择状态</option>
+                        <option value="1">开启</option>
+                        <option value="2">关闭</option>
+                      </select>
+                    </div>
+                  </div>
+
+                <!-- <div class="col-sm-3">
+                    <div class="input-group s-b">
+                     <span class="input-group-addon">推荐</span>
+                     <select type="text" class="form-control" v-model="shaiXuan.is_hot" @change="getList()">
+                        <option value="">请选择推荐</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                      </select>
+                  </div>
+                </div> -->
+              </div>
+              <div :style="{maxHeight:modelStyle.height_c*0.8 + 'px',overflowY: 'auto'}">
+                <mytable :tb="tbdata" @pagechange="initTableData"></mytable>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <script type="text/x-template" id="addpop">
+      <div class="box">
+        <div class="header clearfix" style="padding: 10px 20px;border-bottom:1px solid #e7e7e7;">
+          <div class="title pull-left">
+            <h4 style="display: inline-block;">文章编辑</h4>
+            <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+          </div>
+        </div>
+        <div>
+          <form class="form-horizontal m-t container-fluid" style="margin-bottom: 20px;">
+            <div class="form-group">
+              <label class="col-sm-3 control-label">支部名称：</label>
+              <div class="col-sm-7">
+                <input type="text" class="input-sm form-control" v-model="sendData.group_name">
+                </input>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">状态：</label>
+              <div class="col-sm-7">
+                <div class="radio">
+                  <label class="myradio" :class="{checked:sendData.status==1||sendData.status==true}"><input type="radio" value="1" v-model="sendData.status" v-show="false" > 开启</label>
+                  <label class="myradio" :class="{checked:sendData.status==2||sendData.status==false}" style="margin-left: 10px;"><input type="radio" value="2"  v-model="sendData.status" v-show="false" > 关闭</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">所在地区(三级联动)：</label>
+              <div class="col-sm-7">
+                <!-- <Cascader :data="cascader" v-model="sendData.region_code" v-if="cascader"></Cascader> -->
+                <div class="col-sm-7" v-if="cascader">
+                  <el-cascader :options="cascader" :props="newprops" v-model="sendData['region_code_pre']" size="small" style="width:100%;"
+                  change-on-select
+                  expand-trigger="hover"
+                  ></el-cascader>
+              </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-4 col-sm-offset-3">
+                <button class="btn btn-primary" type="button" id="btn-submit" @click="save()">保存</button>
+                <!--<button class="btn btn-white" type="button" id="btn-submit" @click="del()" v-show="!isAdd">删除</button>-->
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </script>
+
+
+    <script type="text/x-template" id="categoryselect">
+      <div>
+        <select class="input-sm form-control" id="category_se" v-model="check_val">
+          <option value="">请选择启用分类</option>
+          <option :value="cc.cat_id" v-for="cc in wx_region">{{cc.cat_name}}</option>
+        </select>
+      </div>
+    </script>
+    <script type="text/x-template" id="seexcxtem">
+      <div id="seexcxtablebox" style="padding:15px;">
+        <table class="table table-striped table-hover" id="seexcx">
+          <thead><tr><th v-for="(item,index) in tb.col" class="text-center">{{item.text}}</th></tr></thead>
+          <tbody v-if="tb.data&&tb.data.length" id="tbodyvue">
+          <tr v-for="(item,index) in tb.data">
+            <td class="text-center" v-for="(item2,index2) in tb.col" v-html="item[item2.key]" v-if="!item2.format"></td>
+            <td class="text-center" v-for="(item2,index2) in tb.col" v-if="item2.format" >
+              <div v-loadTd="{a:item2.format,b:index}"></div>
+            </td>
+          </tr>
+          </tbody>
+          <tbody v-else><tr><td :colspan="tb.col?tb.col.length:1" class="text-center">暂无数据</td></tr></tbody>
+        </table>
+        <div id="pagesaion"></div>
+      </div>
+    </script>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+    <!--<script src="__PUBLIC__/UE/ueditor.config.js"></script>-->
+    <!--<script src="__PUBLIC__/UE/ueditor.all.min.js"></script>-->
+    <!--<script src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>-->
+    <script src="__PUBLIC__/layer/layer.js"></script>
+    <script src="__PUBLIC__/layer/laydate/laydate.js"></script>
+    <script src="__PUBLIC__/aliyun-video/lib/es6-promise.min.js"></script>
+    <script src="__PUBLIC__/aliyun-video/lib/aliyun-oss-sdk.min.js"></script>
+    <script src="__PUBLIC__/aliyun-video/aliyun-vod-upload-sdk-1.2.0.min.js"></script>
+    <script src="__PUBLIC__/vue/vue.js"></script>
+    <script src="__PUBLIC__/elementui/index.js"></script>
+    <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+    <script src="__PUBLIC__/ajaxApi/index.js"></script>
+    <script type="text/javascript">
+      var mol_sendData = {
+          group_name : '',
+          status : '1',
+          code : '1',
+      }
+      var VM = new Vue({
+        el: "#exapp",
+        data: {
+          tbdata:{
+              col:[
+                  {key:'group_name',text:'支部名称'},
+                  {key:'status_label',text:'支部状态'},
+                  {key:'region_code',text:'地区编号(待删除)'},
+                  {key:'',text:'操作',format:true},
+              ],
+              data:[],
+              shaiXuan:{
+                  page:1,
+                  pagesize:10,
+                  keyword:"",
+                  status:"",
+              },
+              count:10
+          },
+          layerOpen:{
+              type:1,
+              title:'',
+              closeBtn:false,
+              btn:false,
+              zIndex:1000,
+              shadeClose: true,
+              area:['45%','480px']
+          },
+          detail: '',
+          isnew:''
+        },
+        computed: {
+          modelStyle:function(){
+            return{
+              width_c:this.clientWidth,
+              height_c:document.documentElement.clientHeight,
+              width:this.clientWidth*0.9+'px',
+              height:document.documentElement.clientHeight*0.9+'px',
+              marginTop:-(document.documentElement.clientHeight*0.45)+'px',
+              marginLeft:-(this.clientWidth*0.45)+'px'
+            }
+          }
+        },
+        watch: {
+          'modelShow':function(nd){
+            var _this = this;
+            if(nd){
+              $(".model_zcr .content").animate({scrollTop: '0px'}, 200);
+              laydate.render({
+                elem: '#dete', //指定元素
+                calendar: true,
+               done:function(res){
+                _this.sendData.expire_time = res;
+                // console.log(res);
+                // console.log(_this.sendData);
+              }
+              });
+            }else{
+              layer.closeAll()
+            }
+          }
+        },
+          mounted: function() {
+              var _this = this
+              this.initTableData()
+          },
+          methods: {
+              initTableData: function(opt){
+                  var ___this = this
+                  var tbx =  $.extend(this.tbdata,opt)
+                  // 访问接口
+                  groupIndex(tbx.shaiXuan).then(function(res){
+                    ___this.isnew = res.Isnew
+                    tbx.data = res.List
+                    tbx.count = Number(res.Count)
+                    tbx.col[tbx.col.length-1].format = ___this.formatbtn
+                    Vue.set(___this,'tbdata',tbx)
+                  })
+                  // 访问接口结束
+              },
+              formatbtn: function($el,index,VM){
+                  var ___this = this
+                  var $row =  VM.tb.data[index];
+                  var html = '<button type="button" class="btn btn-sm btn-outline btn-primary" @click.stop="getInfo('+index+')">编辑</button>'
+                  return {
+                      html:html,
+                      methods:{
+                          getInfo: function(index){
+                              console.log($row)
+                              ___this.detail = $row
+                              ___this.addData($row)
+                          }
+                      }
+                  }
+              },
+              addData: function(edit){
+                  var ___this = this
+                  /* 新增跳出弹窗 */
+                  var formview = {
+                      template:"#addpop",
+                      data:function(){
+                          return {
+                            isAdd:edit?0:1,
+                            sendData:edit?edit:JSON.parse(JSON.stringify(mol_sendData)),
+                            cascader:'',
+                            newprops: {
+                              value: 'region_code',
+                              label: 'region_name'
+                            }
+                          }
+                      },
+                      created () {
+                          this.initCas()
+                      },
+                      methods:{
+                        initCas: function(){
+                          var _this = this
+                          wx_region().then(function(res){
+                            Vue.set(_this,'cascader',res.region_list)
+                          })
+                        },
+                          save: function() {
+                              var _this = this;
+                              this.$nextTick(function(){
+                                  group_create_or_modify(_this.sendData).then(function(res) {
+                                      layer.msg(res.Message)
+                                      ___this.initTableData()
+                                  });
+                              })
+                          },
+                          del: function(){
+
+                          }
+                      }
+                  };
+                  var laydata  = $.extend(this.layerOpen,{
+                      id:'addpopX',
+                      content:'<div id="opapp"><formview/></div>',
+                      area:['80%','80%'],
+                      success: function(){
+                          new Vue({
+                              el:"#opapp",
+                              components:{'formview':formview}
+                          })
+                      }
+                  })
+                  layer.open(laydata)
+              }
+          }
+      })
+    </script>
+  </body>
+</html>

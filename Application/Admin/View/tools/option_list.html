@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+  <head lang="zh-CN">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/layer/layui/css/layui.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+    <link href="__PUBLIC__/elementui/theme-chalk/index.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/mycomm2.css" rel="stylesheet">
+  </head>
+
+  <body class="gray-bg">
+    <!--id=exapp(begin)-->
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+      <transition name="fade" mode="out-in">
+        <div class="row">
+          <!-- 左边开始 -->
+          <div class="col-sm-8">
+            <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                <h5 class="clearfix">任务列表</h5>
+              </div>
+              <div class="ibox-content">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="input-group">
+                      <input type="text" name="keyword" v-model="tbdata.shaiXuan.keyword" placeholder="请输入关键词" class="form-control">
+                      <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="init()">搜索</button></span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3" v-if="tbdata.shaiXuan.cat_type==2">
+                    <div class="input-group">
+                      <span class="input-group-addon">状态</span>
+                      <select type="text" class="form-control" v-model="tbdata.shaiXuan.status" @change="init()">
+                        <option value="">请选择状态</option>
+                        <option value="1">开启</option>
+                        <option value="2">关闭</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <!-- 表格开始 -->
+                  <table class="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <!-- 1 -->
+                        <th class="text-center">图片</th>
+                        <!-- 2 -->
+                        <th class="text-center">标题</th>
+                        <!-- 3 -->
+                        <th class="text-center">栏目</th>
+                        <!-- 4 -->
+                        <th class="text-center">是否重要</th>
+                        <!-- 5 -->
+                        <th class="text-center">截止时间</th>
+                        <!-- 6 -->
+                        <th class="text-center">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody v-if="tbdata.data.length">
+                      <tr @click.stop="tb_tr_click(item)" v-for="(item,index) in tbdata.data" class="pointer">
+                        <!-- 1 -->
+                        <td class="text-center">
+                          <div class="table_list_img" :style="{background:'url('+item.image+') no-repeat'}"></div>
+                        </td>
+                        <!-- 2 -->
+                        <td class="text-center">{{item.title}}</td>
+                        <!-- 3 -->
+                        <td class="text-center">{{item.deep}}</td>
+                        <!-- 4 -->
+                        <td class="text-center">{{item.sort}}</td>
+                        <!-- 5 -->
+                        <td class="text-center">{{item.add_time}}</td>
+                        <!-- 6 -->
+                        <td align="center" @click.stop>
+                          <el-dropdown @command="handleCommand">
+                            <el-button type="primary" size="small">
+                              操作菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                            </el-button>
+                            <el-dropdown-menu slot="dropdown">
+                              <el-dropdown-item :command="1,item" >编辑</el-dropdown-item>
+                              <el-dropdown-item :command="2,item,index" :divided="true">启/禁用</el-dropdown-item>
+                              <el-dropdown-item :command="3,item" >删除</el-dropdown-item>
+                            </el-dropdown-menu>
+                          </el-dropdown>
+                        </td>
+                      </tr>
+                    </tbody>
+                    <tbody v-else>
+                      <tr>
+                        <td class="text-center" colspan="7">暂无数据</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div id="pagesaion"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 右边开始 -->
+          <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+              <div class="ibox-title">
+                <h5>任务编辑</h5>
+              </div>
+              <div class="ibox-content" v-if="detail">
+                <!--详细内容显示00-->
+                <!--详细内容显示11-->
+              </div>
+              <div class="ibox-content" v-else>
+                <h4 class="text-center">请选择左边任务编辑</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </div>
+     <!--id=exapp(end)-->
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+    <script src="__PUBLIC__/UE/ueditor.config.js"></script>
+    <script src="__PUBLIC__/UE/ueditor.all.min.js"></script>
+    <script src="__PUBLIC__/UE/lang/zh-cn/zh-cn.js"></script>
+    <script src="__PUBLIC__/layer/layui/layui.all.js"></script>
+    <script src="__PUBLIC__/aliyun-video/lib/es6-promise.min.js"></script>
+    <script src="__PUBLIC__/aliyun-video/lib/aliyun-oss-sdk.min.js"></script>
+    <script src="__PUBLIC__/aliyun-video/aliyun-vod-upload-sdk-1.2.0.min.js"></script>
+    <script src="__PUBLIC__/vue/vue.js"></script>
+    <script src="__PUBLIC__/elementui/index.js"></script>
+    <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+    <script src="__PUBLIC__/ajaxApi/index.js"></script>
+    <script type="text/javascript">
+      var sd_mol = {
+        
+      }
+      new Vue({
+        el:"#exapp",
+        data:{
+          detail:''
+        },
+        mounted:function(){
+          
+        },
+        methods:{
+          handleCommand: function(command,ref){
+            
+          }
+        }
+      })
+    </script>
+  </body>
+
+</html>

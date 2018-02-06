@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <title>党建天地 - 后台管理系统</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+  <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+  <link href="__PUBLIC__/layer/layui/css/layui.css" rel="stylesheet">
+  <style type="text/css">
+  #content-main{height:calc(100% - 42px);}
+  [v-cloak]{display:none}
+  .pointer{cursor:pointer}
+  .btn_push_wrap{position: absolute;bottom: 45px;left:0;right: 0;}
+
+  .open_window_box{position:absolute;top:50%;left:0;right:0;margin-top:-170px}
+  .open_window_box img{width: 100%;height:auto;vertical-align:middle;}
+
+  .push_wechat_imgbox,.push_wechat_imgbox_mini{display: inline-block;overflow: hidden;width: 50px;}
+  .push_wechat_imgbox_mini{width: 24px;vertical-align: middle}
+  .desc_push,.desc_push_wx{margin-top:10px}
+  .desc_push_wx{line-height: 25px;}
+  .btn_push{margin-top:15px}
+  .btn_push.first{margin-top:30px}
+  .btn_push .btn{width: 200px;}
+  .tips_push{margin-top: 20px}
+  .qcore_push{display: inline-block;overflow: hidden;width: 300px;height: 300px;}
+
+  .tpl{max-width: 600px;margin: auto;margin-top:15px;max-height: 300px;overflow-y: auto;}
+  .tpl .tpl_item{padding: 5px;border-radius: 4px;border:1px solid #e7e7e7;position: relative;margin: 10px 0;}
+  .tpl .tpl_item.check{border:2px dashed #E52633;}
+  .tpl .tpl_item .mask{position: absolute;top: 0;left:0;right: 0;bottom: 0;z-index: 10;background: rgba(0, 0, 0, 0.4)}
+  .tpl .tpl_item .mask .btn_mask_push{color: #fff;border:1px solid #fff;padding: 5px 8px;height: 30px;line-height: 20px;box-sizing: border-box;}
+  .tpl .tpl_item .mask .btn_mask_push{position: absolute;top:50%;margin-top: -15px;left:50%;margin-left: -37px;}
+  /* .tpl .img_wrap{width: 130px;height: 130px;} */
+  .tpl .vs{margin-top: 10px;}
+
+  .fade-enter-active, .fade-leave-active {transition: opacity .5s}
+  .fade-enter, .fade-leave-to {opacity: 0}
+
+  /* .btn_stop_push{position:absolute;bottom: -40px;left:0;right: 0;background: #fff;} */
+  </style>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+  <div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation">
+      <div class="nav-close">
+        <i class="fa fa-times-circle"></i>
+      </div>
+      <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+          <li class="nav-header">
+            <div class="dropdown profile-element">
+              <span>
+                <img alt="image" class="img-circle" src="__PUBLIC__/img/basicprofile.jpg" width="64" />
+              </span>
+              <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                <span class="clear">
+                  <span class="block m-t-xs">
+                    <strong class="font-bold">{:session('admin_name')}</strong>
+                  </span>
+                  <span class="text-muted text-xs block">{:session('role_name')}
+                    <!--<b class="caret"></b>-->
+                  </span>
+                </span>
+              </a>
+              <!--<ul class="dropdown-menu animated fadeInRight m-t-xs">
+                                <li><a class="J_menuItem" href="form_avatar.html">修改头像</a>
+                                </li>
+                                <li><a class="J_menuItem" href="profile.html">个人资料</a>
+                                </li>
+                                <li><a class="J_menuItem" href="contacts.html">联系我们</a>
+                                </li>
+                                <li><a class="J_menuItem" href="mailbox.html">信箱</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li><a href="{:U('site/logout')}" class="ajax_link">安全退出</a>
+                                </li>
+                            </ul>-->
+            </div>
+            <div class="logo-element">H+
+            </div>
+          </li>
+          <li>
+            <a class="J_menuItem" href="index_v1.html" data-index="8">
+              <img src="__PUBLIC__/icon/党建专题.png" style="width:20px;height:20px" alt="">
+              <!--DK_PUBLIC_URL.-->
+              <span class="nav-label">主页</span>
+            </a>
+          </li>
+          <volist name="result.menu_list" id="vo">
+            <?php if($vo==[]) continue;  ?>
+            <li>
+              <a href="#">
+                <img src="{$vo.cls}" style="width:20px;height:20px" alt="">
+                <span class="nav-label">{$vo.txt}</span>
+                <span class="fa arrow"></span>
+              </a>
+              <ul class="nav nav-second-level">
+                <volist name="vo.itm" id="vo2">
+                  <?php if($vo2==[]) continue;  ?>
+                  <if condition="$vo2['cls']">
+                    <li>
+                      <a href="#">
+                        <i class="fa {$vo2.cls}"></i>
+                        <span class="nav-label">{$vo2.txt}</span>
+                        <span class="fa arrow"></span>
+                      </a>
+                      <volist name="vo2.itm" id="vo3">
+                        <?php if($vo3==[]) continue;  ?>
+                        <ul class="nav nav-second-level">
+                          <li style="padding:0 5% 0 11%">
+                            <a class="J_menuItem" href="{:U($vo3['menu_code'])}">{$vo3.txt}</a>
+                          </li>
+                        </ul>
+                      </volist>
+                    </li>
+                    <else />
+                    <li>
+                      <a class="J_menuItem" href="{:U($vo2['menu_code'])}">{$vo2.txt}</a>
+                    </li>
+                  </if>
+                </volist>
+
+              </ul>
+            </li>
+          </volist>
+        </ul>
+        <div id="publish" class="btn_push_wrap text-center">
+          <div v-if="hideGbtn">
+            <button type="button" class="btn btn-w-m btn-danger" @click="publish()" v-if="isnormal">立即发布</button>
+            <button type="button" class="btn btn-danger" @click="publish()" v-else>
+              <img src="/public/img/push.svg" alt="" style="width:20px;height:auto" />
+            </button>
+          </div>
+          <div v-else>
+            <button type="button" class="btn btn-w-m btn-danger" @click="searchxcx()" v-if="isnormal">查看小程序</button>
+            <button type="button" class="btn btn-danger" @click="searchxcx()" v-else>
+              <img src="/public/img/seexcx.svg" alt="" style="width:20px;height:auto" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </nav>
+    <!--左侧导航结束-->
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+      <div class="row content-tabs">
+        <button class="roll-nav roll-left J_tabLeft">
+          <i class="fa fa-backward"></i>
+        </button>
+        <nav class="page-tabs J_menuTabs">
+          <div class="page-tabs-content">
+            <a href="javascript:;" class="active J_menuTab" data-id="index_v1.html">首页</a>
+          </div>
+        </nav>
+        <button class="roll-nav roll-right J_tabRight">
+          <i class="fa fa-forward"></i>
+        </button>
+        <div class="btn-group roll-nav roll-right">
+          <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作
+            <span class="caret"></span>
+
+          </button>
+          <ul role="menu" class="dropdown-menu dropdown-menu-right">
+            <li class="J_tabShowActive">
+              <a>定位当前选项卡</a>
+            </li>
+            <li class="divider"></li>
+            <li class="J_tabCloseAll">
+              <a>关闭全部选项卡</a>
+            </li>
+            <li class="J_tabCloseOther">
+              <a>关闭其他选项卡</a>
+            </li>
+          </ul>
+        </div>
+        <!-- <a href="{:U('site/logout')}" class="roll-nav roll-right J_tabExit ajax_link"><i class="fa fa fa-sign-out"></i> 退出</a> -->
+        <a href="{:U('site/logout')}" class="roll-nav roll-right J_tabExit ajax_link">
+          <i class="fa fa fa-sign-out"></i> 退出</a>
+      </div>
+      <div class="row J_mainContent" id="content-main">
+        <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="{:U('home/index_v1')}" frameborder="0" data-id="index_v1.html"
+          seamless></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/x-template" id="wechatauthod">
+      <div class="wrapper wrapper-content animated fadeInRight" id="exapp1" v-cloak style="height: 100%;">
+          <div class="row">
+            <!-- 首次发布授权s -->
+            <div class="col-sm-12" v-if="!isauth">
+                <div class="text-center">
+                  <div>
+                    <div class="push_wechat_imgbox"><img src="/public/img/icon-wechat.svg" alt=""></div>
+                  </div>
+                  <h2 class="title_push">微信小程序授权</h2>
+                  <h3 class="desc_push text-danger" v-if="fail">此次授权失败,请重新授权</h3>
+                  <p class="desc_push" v-else>首次发布将需要进行小程序授权，请使用小程序管理员账号进行操作。</p>
+                  <div class="btn_push first"><button type="button" class="btn btn-w-m btn-info" @click="regwechat()">注册小程序账号</button></div>
+                  <div class="btn_push"><button type="button" class="btn btn-outline btn-danger" @click="order()">我已有账号，前往授权</button></div>
+                  <p class="tips_push"><i class="fa fa-info-circle"></i>&nbsp; 提醒：请授权<strong>微信小程序</strong>账号，非公众号。</p>
+                </div>
+            </div>
+            <!-- 首次发布授权e -->
+          </div>
+        </div>
+  </script>
+  <script type="text/x-template" id="wechatpush">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp2" v-cloak style="height: 100%;">
+        <div class="row">
+          <div class="col-sm-12">
+                  <div class="text-center">
+                    <div class="desc_push_wx">
+                        <div class="push_wechat_imgbox_mini"><img src="/public/img/icon-wechat.svg" alt=""></div>
+                        <span>小程序已授权</span>
+                      </div>
+                      <p class="tips_push"><i class="fa fa-info-circle"></i>&nbsp; 提醒：首次发布将向微信公众平台提交审核，约1-2天。</p>
+                    <div class="desc_push_wx"  v-if="!isclose&&ispush">
+                        <span>下方为小程序体验版二维码</span>
+                    </div>
+                    <div class="qcore_push" v-if="!isclose&&ispush">
+                        <img :src="tiyanimg" alt="">
+                    </div>
+                    <div class="btn_stop_push text-center" v-if="!isclose&&ispush">
+                      <button type="button" class="btn btn-w-m btn-danger" @click="stpublish()">停止发布</button>
+                    </div>
+                    <div class="btn_stop_push text-center" v-if="!isclose&&!ispush" style="margin-top:30px">
+                        <button type="button" class="btn btn-w-m btn-danger" @click="publish_com()">立即发布</button>
+                      </div>
+                    <p class="tips_push" v-if="isclose">已停止发布</p>
+                    <div class="btn_stop_push text-center" v-if="isclose" style="margin-top:30px">
+                      <button type="button" class="btn btn-w-m btn-danger" @click="publish_com()">重新发布</button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+  </script>
+  <script type="text/x-template" id="wechatpushfail">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp2" v-cloak style="height: 100%;">
+        <div class="row">
+          <div class="col-sm-12">
+                  <div class="text-center">
+                    <div class="desc_push_wx">
+                        <div class="push_wechat_imgbox_mini"><img src="/public/img/icon-wechat.svg" alt=""></div>
+                        <span class="text-danger">小程序授权失败</span>
+                      </div>
+                    <div class="btn_stop_push text-center" style="margin-top:30px">
+                      <button type="button" class="btn btn-w-m btn-danger" @click="publish_com()">重新授权</button>
+                    </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+  </script>
+  <script type="text/x-template" id="seexcxtem">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" style="height: 100%;">
+      <div class="row">
+        <div class="col-sm-12" v-if="tb">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title" style="border:0;padding:0;min-height:30px;">
+              <h5 class="clearfix">微信小程序列表</h5>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="input-group">
+                      <input type="text" name="keyword" v-model="tb.shaiXuan.keyword" placeholder="请输入关键词" class="form-control">
+                      <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="search()">搜索</button></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="input-group">
+                      <span class="input-group-addon">状态</span>
+                      <select type="text" class="form-control" v-model="tb.shaiXuan.status" @change="search()">
+                        <option value="">请选择状态</option>
+                        <option value="1">开启</option>
+                        <option value="2">关闭</option>
+                      </select>
+                  </div>
+                </div>
+                  <div id="seexcxtablebox">
+                    <table class="table table-striped table-hover" id="seexcx">
+                      <thead><tr><th v-for="(item,index) in tb.col" class="text-center">{{item.text}}</th></tr></thead>
+                      <tbody v-if="tb.data&&tb.data.length" id="tbodyvue">
+                        <tr v-for="(item,index) in tb.data">
+                          <td class="text-center" v-for="(item2,index2) in tb.col" v-html="item[item2.key]" v-if="!item2.format"></td>
+                          <td class="text-center" v-for="(item2,index2) in tb.col" v-if="item2.format" >
+                            <div v-loadTd="{a:item2.format,b:index}"></div>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tbody v-else><tr><td :colspan="tb.col?tb.col.length:1" class="text-center">暂无数据</td></tr></tbody>
+                    </table>
+                    <div id="pagesaion"></div>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+  </script>
+  <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+  <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+  <script src="__PUBLIC__/admin/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+  <script src="__PUBLIC__/admin/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+  <script type="text/javascript" src="__PUBLIC__/admin/js/contabs.min.js"></script>
+  <script src="__PUBLIC__/admin/js/plugins/pace/pace.min.js"></script>
+  <script src="__PUBLIC__/layer/layui/layui.all.js"></script>
+  <script src="__PUBLIC__/admin/js/hplus.min.js?v=4.1.0"></script>
+  <script src="__PUBLIC__/vue/vue.js"></script>
+  <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+  <script src="__PUBLIC__/ajaxApi/index.js"></script>
+  <script>
+    /* 1 */
+    Vue.component('wechatauthod', {
+      template: '#wechatauthod',
+      props: ['isauth', 'aurl', 'fail'],
+      data: function () {
+        return {
+          orderurl: this.aurl,
+        }
+      },
+      methods: {
+        openW: function (url) {
+          var VM = this;
+          var op = window.open();
+          op.location.href = url
+        },
+        order: function () {
+          this.openW(this.orderurl)
+        },
+        regwechat: function () {
+          this.openW('https://mp.weixin.qq.com/debug/wxadoc/introduction/#注册小程序帐号')
+        }
+      }
+    });
+    /* 2 */
+    Vue.component('wechatpush', {
+      template: '#wechatpush',
+      props: ['ispush', 'isclose', 'tiyanimg'],
+      methods: {
+        publish_com: function (item) {
+          var _this = this;
+          xcx_commitCode(item).then(function (res) {
+            layer.msg(res.Message)
+            _this.$emit('pushok')
+          })
+        },
+        stpublish: function () {
+          var _this = this
+          xcx_pause().then(function (res) {
+            layer.msg(res.Message)
+            _this.$emit('pushstop', 1)
+          })
+        }
+      }
+    });
+
+    ///////////////////////////////////////////////////////
+    $(document).ready(function () {
+      $('.ajax_link').click(function () {
+        $.post($(this).attr('href'), {}, function (d) {
+          alert(d.info);
+          if (d.url) {
+            window.location.href = d.url;
+          }
+          if (d.status == 1) {
+            window.location.reload();
+          }
+        }, 'json');
+        return false;
+      });
+      var callback_code = {$callback_code};
+      var pubVue = new Vue({
+        el: '#publish',
+        data: {
+          isnormal: true,
+          isauth: false,
+          isclose: false,
+          aurl: '',
+          isPush: '',
+          hideGbtn: {$result.is_branch_admin},
+          superman: false,
+          openlaydata: {
+            type: 1,
+            title: '',
+            closeBtn: false,
+            btn: false,
+            shadeClose: true,
+            area: ['45%', '480px']
+          }
+        },
+        mounted: function () {
+          var _this = this
+          this.$nextTick(function () {
+            _this.init()
+            $(window).bind('load resize', function () {
+              var cw = document.documentElement.clientWidth
+              if (cw < 770) {
+                _this.isnormal = false
+              }
+            })
+          })
+        },
+        methods: {
+          init: function () {
+            if (callback_code == '1' || callback_code == '2') {
+              this.publish();
+            }
+          },
+          publish: function () {
+            xcx_getAuthorizeUrl().then(function (res) {
+              Vue.set(pubVue, 'isauth', Number(res.IsAuth))
+              Vue.set(pubVue, 'isclose', Number(res.IsClose))
+              Vue.set(pubVue, 'isPush', res.IsPush)
+              Vue.set(pubVue, 'aurl', res.AuthorizeUrl)
+              if (!Number(res.IsAuth)) {
+                pubVue.notAuth();
+              } else {
+                if (callback_code == 2) {
+                  pubVue.failauth();
+                  return
+                }
+                pubVue.hadAuth();
+              }
+            })
+          },
+          searchxcx: function () {
+            var _thisf = this
+            /* 高级区域查看所属区域小程序 */
+            layer.open($.extend(this.openlaydata, {
+              id: 'seexcxpop',
+              content: '<div id="seexcxbox"><mytable :tb="tb" @pagechange="init"/></div>',
+              area: ['80%', '80%'],
+              success: function () {
+                var FVM = new Vue({
+                  el: "#seexcxbox",
+                  data: {
+                    tb: ''
+                  },
+                  mounted: function () {
+                    this.init()
+                  },
+                  methods: {
+                    init: function (opt) {
+                      var ___this = this
+                      var tbx = {
+                        col: [
+                          { key: 'user', text: '小程序负责人' },
+                          { key: 'phone', text: '小程序手机' },
+                          { key: 'address', text: '小程序地址' },
+                          { key: 'region_code', text: '地区编号(待删除)' },
+                          { key: 'status_label', text: '操作', format: true },
+                        ],
+                        data: [],
+                        shaiXuan: {
+                          page: 1,
+                          pagesize: 8,
+                          keyword: "",
+                          status: "",
+                        },
+                        count: 10
+                      },
+                        tbx = $.extend(tbx, opt)
+                      // 访问接口
+                      wxIndex(tbx.shaiXuan).then(function (res) {
+                        tbx.data = res.List ? res.List : []
+                        tbx.count = Number(res.Count)
+                        tbx.col[tbx.col.length - 1].format = ___this.formatbtn
+                        Vue.set(___this, 'tb', tbx)
+                      })
+                      // 访问接口结束
+                    },
+                    formatbtn: function ($el, index, VM) {
+                      var row = VM.tb.data[index]
+                      var html = '<button type="button" class="btn btn-sm btn-outline btn-danger" @click="checkxcx(' + index + ')">选择</button>'
+                      return {
+                        html: html,
+                        methods: {
+                          checkxcx: function (index) {
+                            /**row为小程序列表中的“行”数据，可获取小程序id，访问接口成功后重新加载页面达到查看其他小程的目的
+                             * */
+                            console.log(row)
+                            window.location.reload()
+                            $('#seexcxpop').closest('.layui-layer').remove();
+                            $('.layui-layer-shade').remove();
+                          }
+                        }
+                      }
+                    },
+                  }
+                })
+              }
+            })
+            )
+          },
+
+          notAuth: function () {
+            /* 未授权操作 */
+            layer.open($.extend(this.openlaydata, {
+              id: 'noauthodlay',
+              content: '<div id="opapp" class="open_window_box">\
+                          <wechatauthod @isauthod="setTop" :isauth="isauth" :aurl="aurl"></wechatauthod>\
+                        </div>',
+              success: function () {
+                var VO = new Vue({
+                  el: '#opapp',
+                  data: {
+                    isauth: pubVue.isauth,
+                    aurl: pubVue.aurl
+                  },
+                  methods: {
+                    setTop: function (d) {
+                      Vue.set(pubVue, 'isauth', d)
+                    }
+                  }
+                })
+              }
+            })
+            )
+          },
+          hadAuth: function () {
+            /* 授权后发布等操作 */
+            var ld = $.extend(this.openlaydata, {
+              id: 'hadauthodlay',
+              area: ['45%', '600px'],
+              content: '<div id="opapp" class="open_window_box" :style="isStop?appstyle2:(isPush?appstyle1:appstyle3)">\
+                          <wechatpush\
+                          :ispush="isPush" \
+                          :isclose = "isStop" \
+                          :tiyanimg="tiyanimg" @pushok="pushcallback" @pushstop="pushcallback">\
+                          </wechatpush>\
+                        </div>',
+              success: function () {
+                var mvm = new Vue({
+                  el: '#opapp',
+                  data: {
+                    isauth: pubVue.isauth,
+                    isPusho: pubVue.isPush,
+                    isclose: pubVue.isclose,
+                    tiyanimg: '',
+                    appstyle1: { marginTop: '-260px' },
+                    appstyle2: { marginTop: '-130px' },
+                    appstyle3: { marginTop: '-100px' }
+                  },
+                  computed: {
+                    isStop: function () {
+                      //授权且关闭发布（true）
+                      return this.isauth && this.isclose
+                    },
+                    isPush: function () {
+                      //授权且发布（true)
+                      return this.isauth && this.isPusho
+                    }
+                  },
+                  created: function () {
+                    this.getCore();
+                  },
+                  methods: {
+                    getCore: function () {
+                      xcx_getQrcode().then(function (res) {
+                        Vue.set(mvm, 'tiyanimg', res.Qrcode)
+                      })
+                    },
+                    pushcallback: function (stop) {
+                      this.getCore()
+                      if (stop) {
+                        Vue.set(mvm, 'isclose', 1)
+                      } else {
+                        Vue.set(mvm, 'isclose', 0)
+                      }
+                      Vue.set(mvm, 'isPusho', !mvm.isPusho)
+                    }
+                  }
+                });
+              }
+            })
+            layer.open(ld)
+          },
+          failauth: function () {
+            /* 授权失败弹窗操作 */
+            var ld = $.extend(this.openlaydata, {
+              id: 'failauthodlay',
+              content: '<div id="opapp" class="open_window_box">\
+                          <wechatauthod @isauthod="setTop" :isauth="isauth" :aurl="aurl" :fail="fail"></wechatauthod>\
+                        </div>',
+              success: function () {
+                var VO = new Vue({
+                  el: '#opapp',
+                  data: {
+                    isauth: pubVue.isauth,
+                    aurl: pubVue.aurl,
+                    fail: true
+                  },
+                  methods: {
+                    setTop: function (d) {
+                      Vue.set(pubVue, 'isauth', d)
+                    }
+                  }
+                });
+              }
+            });
+            layer.open(ld);
+          }
+        }
+      })
+    });
+  </script>
+</body>
+
+</html>

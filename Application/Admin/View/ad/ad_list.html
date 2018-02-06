@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>党建天地 - 基础表格</title>
+    <meta name="description" content="">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache" content="no-cache">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="__PUBLIC__/layer/layui/css/layui.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+    <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+   
+  </head>
+  <style type="text/css">
+    [v-cloak]{display:none}
+    .pointer{cursor:pointer}
+    .category_img{width:100% !important;height:auto !important;vertical-align: middle;border-radius:0 !important;}
+    .client-avatar{width:42px;height:42px;line-height:38px;display:inline-block;border-radius:8px;border:1px solid #f0f0f0;overflow:hidden;text-align:center;background: #fff;}
+    .client-avatar.plus{width:80px;height:80px;margin-bottom:10px}
+    .label{user-select: none;-ms-user-select: none;-webkit-user-select: none;-moz-user-select: none;}
+    .radio label{position: relative;}
+    .radio label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .radio label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-144px 0px;}
+    .radio label.checked:before{background-position:-168px 0px}
+    .radio.private{ margin: 0;margin-left: 10px;}
+    .radio.private label{margin-left: 20px;}
+    .checkbox label{position: relative;}
+    .checkbox label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .checkbox label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-24px 0px;}
+    .checkbox label.checked:before{background-position:-48px 0px}
+    .checkbox.private{ margin: 0;margin-left: 10px;}
+    .checkbox.private label{margin-left: 20px;font-size: 16px;}
+    .btn-tools{position:absolute;top:50%;margin-top:-7px;right:0}
+    .article-content *{max-width: 100%;word-break: break-all;}
+    
+    .model_zcr{background: rgba(0,0,0,0.6);position: fixed;top: 0;bottom: 0;left: 0;right: 0;z-index: 19901110;}
+    .model_zcr .box{background: #fff;position: absolute;top: 50%;left: 50%;overflow: hidden;padding-bottom: 20px;}
+    .model_zcr .content{height: calc(100% - 50px);overflow-y: auto;overflow-x: hidden;}
+    
+    select.input-sm{height: 32px !important;line-height: 25px !important;}
+    
+    .images_box{display: inline-block;border: 1px solid  #e7e7e7;border-radius: 4px;position: relative;}
+    .images_box:nth-child(n+1){margin-left: 10px;}
+    .images_box .images_close{width:20px;height:20px;color: #fff;background:#ed5666;position: absolute;top: -6px;right: -6px;border-radius: 50%;}
+    .images_box .images_close{line-height: 20px;text-align: center;z-index: 1;cursor: pointer;}
+    .images_box img{margin: 5px;width: 130px;height: auto;vertical-align: middle;}
+    .table_img_ad {width: 130px;}
+    img {width: 100%;height: auto;vertical-align: middle;}
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    input[type="number"]{
+      -moz-appearance: textfield;
+    }
+    
+    .backimg{overflow: hidden;max-height: 260px;}
+    .backimg img{width:100%;height: auto;}
+    .active_title{border-left:2px solid red;padding: 0 10px;margin: 10px 0;font-size: 16px;}
+    .clearspace{margin: 0;padding: 0;}
+  </style>
+
+  <body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight" id="exapp" v-cloak style="height: 100%;">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="ibox float-e-margins">
+            <div class="ibox-title">
+              <h5 class="clearfix">广告列表</h5>
+              <div class="ibox-tools">
+                <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="getInfo('')">新增</button>
+              </div>
+            </div>
+            <div class="ibox-content">
+              <div class="row">
+                <div class="col-sm-4">
+                  <div class="input-group">
+                      <input type="text" name="keyword" v-model="shaiXuan.search" placeholder="请输入关键词" class="form-control">
+                      <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="getList()">搜索</button></span>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                  <div class="input-group">
+                      <span class="input-group-addon">状态</span>
+                      <select type="text" class="form-control" v-model="shaiXuan.status" @change="getList()">
+                        <option value="">请选择状态</option>
+                        <option value="1">已通过</option>
+                        <option value="2">未通过</option>
+                      </select>
+                  </div>
+                </div>
+              </div>
+              <div :style="{maxHeight:modelStyle.height_c*0.8 + 'px',overflowY: 'auto'}">
+                <table class="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th style="text-align: center;">广告位置</th>
+                      <th style="text-align: center;">标题</th>
+                      <th style="text-align: center;">广告内容</th>
+                      <th style="text-align: center;">图片</th>
+                      <th style="text-align: center;">点击量</th>
+                      <th style="text-align: center;">过期时间</th>
+                      <th style="text-align: center;">首页显示</th>
+                      <th style="text-align: center;">审核状态</th>
+                      <th style="text-align: center;">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody v-if="List" v-show="List.length">
+                    <!-- @click="getInfo(item)" -->
+                    <tr  v-for="(item,index) in List" class="pointer">
+                      <td>
+                          <div style="display: inline-block;font-size: 14px;margin-bottom: 5px;">{{item.Location}}</div>
+
+                      </td>
+                      <td>
+                          <div style="display: inline-block;font-size: 14px;margin-bottom: 5px;">{{item.AdTitle}}</div>
+
+                      </td>
+                      <td>
+                          <div style="display: inline-block;font-size: 14px;margin-bottom: 5px;">{{item.ValueName}}</div>
+
+                      </td>
+                      <td width="42">
+                        <div class="table_img_ad" >
+                          <img alt="图片" :src="item.Picture" class="category_img" id="tips" @mouseover="tips" @mouseout="closetips"  v-if="item.Picture"/>
+                          <img class="category_img" src="/public/img/default.svg" v-else/>
+                        </div>
+                      </td>
+                      <td align="center">
+                          {{item.ClickCount}}
+                      </td>
+                       <td align="center">
+                        <span class="label" :class="{'label-success':item.Over==1,'label-danger':item.Over==2}">
+                          {{item.Over==1?'未过期':'已过期'}}
+                        </span>
+                      </td>
+                        <td align="center">
+                        <span class="label" :class="{'label-success':item.Top==1,'label-danger':item.Top==2}">
+                          {{item.Top==1?'是':'否'}}
+                        </span>
+                      </td>
+                      <td align="center">
+                        <span class="label" :class="{'label-success':item.Enabled==1,'label-danger':item.Enabled==2}">
+                          {{item.Enabled==1?'已通过':'未通过'}}
+                        </span>
+                      </td>
+                      <td align="center">
+                        <button class="btn btn-sm btn-outline btn-primary" style="margin: 0;" @click.stop="getInfo(item)" >编辑</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody v-show="!List.length">
+                    <tr class="text-center">
+                      <td colspan="5"><span>暂无数据</span> </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div id="pagesaion" v-show="List"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!--左边-->
+        
+          <!--end-->
+        </div>
+      </div>
+    </div>
+    <div class="hidden" id="l-u">
+        <div class="" id="fo">
+          <div class="ibox-content">
+                <div class="row">
+                    <div class="col-sm-12 b-r">
+                        <form method="get" class="form-horizontal">
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">广告位置</label>
+                                <div class="col-sm-10">
+                                   <select  class="form-control"  name="PositionCode" v-model="savevalue.PositionCode">
+                                   
+                                      <option value="">--请选择--</option>
+                                      <option :value="key" v-for="(value,key) in Location" >{{value}}</option>
+                                </select>
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">广告类型</label>
+                                <div class="col-sm-10">
+                                    <select  class="form-control"  name="AdType" id="AdType"   @change="getcontent(savevalue.AdType)" v-model="savevalue.AdType">
+                                      <option value="">--请选择--</option>
+                                      <option :value="key" v-for="(value,key) in Type">{{value}}</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">广告内容</label>
+                                <div class="col-sm-10">
+                                      <select  class="form-control "  name="Value" id="value" v-model="savevalue.Value">
+                                          <option value="">--请选择--</option>
+                                          <option :value="key" v-for="(value,key) in list">{{value}}</option>
+                                      </select>
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">广告标题</label>
+                                <div class="col-sm-10">
+                                    <input type="text"  class="form-control" name="Title" placeholder="请输入标题" value="savevalue.Title" id="" v-model="savevalue.Title">
+                                </div>
+                            </div>
+                            
+
+                            
+                           
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">开始时间 // 结束时间</label>
+                                <div class="col-sm-10">
+                                    <input placeholder="点击选择开始和结束时间" :value="savevalue['Date']"  class="form-control layer-date" id="daaaaa"  >
+                                </div>
+                            </div>
+
+                            
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">广告图片</label>
+                                <div class="col-sm-10">
+                                  <div class="layui-upload">
+                                    <button type="button" class="layui-btn" id="test1">上传图片</button> 
+                                    <div class="layui-upload-list" style="width:100px;height:100px;overflow:hidden">
+                                      <img class="layui-upload-img" id="demo1" :src="savevalue['photo']">
+                                      <p id="demoText"></p>
+                                    </div>
+                                    推荐比例（宽:750像素 高:340像素）
+                                  </div>  
+                                </div>
+                            </div>
+
+
+                            
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">排序值</label>
+                                <div class="col-sm-10">
+                                  <input type="text"  class="form-control" name="SortOrder" value="savevalue['SortOrder']" placeholder="请输入排序值(默认为1)" id="" v-model="savevalue['SortOrder']">
+                                </div>
+                            </div>
+
+                            
+                             <div class="form-group">
+                                <label class="col-sm-2 control-label">首页显示</label>
+                                <div class="col-sm-10">
+                                    <label><input type="radio" name="Top" value="1" :class="{checked:savevalue.Enabled==1||savevalue.Enabled==true}" v-model="savevalue.Top"> 是 </label>
+                                    <label><input type="radio" name="Top" value="2" :class="{checked:savevalue.Enabled==2||savevalue.Enabled==false}" v-model="savevalue.Top"> 否 </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">审核状态</label>
+                                <div class="col-sm-10">
+                                    <label><input type="radio" name="status" value="1" :class="{checked:savevalue.Enabled==1||savevalue.Enabled==true}" v-model="savevalue.Enabled"> 是 </label>
+                                    <label><input type="radio" name="status" value="2" :class="{checked:savevalue.Enabled==2||savevalue.Enabled==false}" v-model="savevalue.Enabled"> 否 </label>
+                                </div>
+                            </div>
+
+
+
+                    </div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <button class="btn btn-primary" type="button" @click="save">保存内容</button>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+    <script src="__PUBLIC__/layer/layui/layui.all.js"></script>
+    <script src="__PUBLIC__/vue/vue.js"></script>
+    <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+    <script src="__PUBLIC__/ajaxApi/index.js"></script>
+    <script type="text/javascript">
+      var mol_sendData = {
+        cat_id:'',
+        title:'',
+        refer:'',
+        desc:'',
+        keywords:'',
+        detail:'',
+        sort:'',
+        is_hot:1,
+        images:'',
+        status:1,
+        show_time:''
+      }
+      var VM = new Vue({
+        el: "#exapp",
+        data: {
+          shaiXuan:{
+            search:"",
+            status:"",
+            page:1,
+            pagesize:8
+          },
+          tipsindex:'',
+          List: '',
+          detail: '',
+          sendData:JSON.parse(JSON.stringify(mol_sendData)),
+          modelStyle:{
+            width_c:document.documentElement.clientWidth,
+            height_c:document.documentElement.clientHeight,
+            width:document.documentElement.clientWidth*0.9+'px',
+            height:document.documentElement.clientHeight*0.9+'px',
+            marginTop:-(document.documentElement.clientHeight*0.45)+'px',
+            marginLeft:-(document.documentElement.clientWidth*0.45)+'px',
+            show:false
+          }
+        },
+        watch: {
+          'modelStyle.show':function(nd){
+            if(nd){
+              $(".model_zcr .content").animate({scrollTop: '0px'}, 200);
+              laydate.render({
+                elem: '#dete', //指定元素
+                calendar: true
+              });
+            }else{
+              layer.closeAll()
+            }
+          }
+        },
+        mounted: function() {
+          var _this = this
+          this.getList();
+        },
+        methods: {
+          getList: function(count,firstLoad) {
+            var _this = this
+            layui.use('laypage', function(){
+              var laypage = layui.laypage;
+              //执行一个laypage实例
+              laypage.render({
+                elem: 'pagesaion' //注意，这里的 test1 是 ID，不用加 # 号
+                ,layout: ['count', 'prev', 'page', 'next', 'skip']
+                ,count: count //数据总数，从服务端得到
+                ,limit:_this.shaiXuan.pagesize
+                ,curr:_this.shaiXuan.page
+                ,jump: function(obj, first){
+                  _this.shaiXuan.page = obj.curr
+                  _this.init(function(res){
+                    if(first&&!firstLoad){_this.getList(Number(res.Count),first)}
+                    _this.$set(_this.$data, "List", res.List)
+                  })
+                }
+              });
+            });
+          },
+
+          tips:function(res){
+            var width = res.target.width;
+            var height= res.target.height;
+
+            this.tipsindex = layer.tips('宽:'+width+'<br>高:'+height, $(res.target), {
+              tips: [4, '#3595CC'],
+              time: 4000
+            });
+          },
+
+          closetips:function(){
+            layer.close(this.tipsindex);
+          },
+
+          init:function(callback){
+            var _this = this
+            ad_ad_list(_this.shaiXuan).then(function(res) {
+              if(callback){callback(res)}else{_this.$set(_this.$data, "List", res.List)}
+            })
+          },
+          getInfo: function(item) { //回显，预览
+            var _this = this;
+            var z = $('#l-u').clone();
+            z.find('#fo').attr('id','fo2');
+            z.find('#test1').attr('id','test2');
+            z.find('#daaaaa').attr('id','daaaaa2');
+            var editindex = layer.open({
+              'id':'edit',
+              'type':1,
+              'title':item?'广告编辑':'广告新增',
+              'area':['90%','90%'],
+              'content':z.html(),
+              'closeBtn':2,
+              'shadeClose':true,
+              success:function(){
+                var VMM = new Vue({
+                  el:'#fo2',
+                  data:{
+                    Location:'',
+                    Type:'',
+                    savevalue:{
+                      // 赋值内容
+                      type:'',
+                      PositionCode:item.PositionCode || '',
+                      AdType:item.AdType || '',
+                      Value:item.AdValue || '',
+                      Date:(item) ? item.StartTime + ' // ' + item.EndTime : '',
+                      SortOrder:item.SortOrder || '',
+                      photo:item.Picture || '',
+                      Title:item.AdTitle || '',
+                      AdId:item.AdId || '',
+                      Enabled:item.Enabled || '',
+                      Top:item.Top || '',
+                    },
+                    list:'',
+                    old:item,
+                  },
+                  mounted:function(){
+                      this.init()
+                  },
+                  methods:{
+                    getcontent:function(val){
+                      var _this = this;
+                      ad_ad_type({type:val}).then(function(res){
+                        _this.list = res['List'];
+                      })
+                    },
+                    save:function(){
+                      var _this = this;
+                      ad_ad_save(_this.savevalue).then(function(res){
+                          layer.msg(res.Message,{icon:6});
+                          layer.close(editindex);
+                          VM.init();
+                      })
+                    },
+                    init:function(){
+                        var _this = this
+                        _this.getcontent(_this.savevalue.AdType);
+                        ad_ad_list({}).then(function(res) {
+                          _this.Location = res['AdLocation'];
+                          _this.Type = res['AdData'];
+                        }),
+                        //日期插件
+                         layui.use('laydate', function(){
+                          var laydate = layui.laydate;
+                          
+                          //执行一个laydate实例
+                          laydate.render({
+                            elem: '#daaaaa2' //指定元素
+                            ,type: 'datetime'
+                            ,range: '//'
+                            ,done:function(value){
+                             _this.$set(_this.savevalue,'Date',value)
+                            }
+                          });
+                        });
+                        //图片上传
+                        layui.use('upload', function(){
+                        var $ = layui.jquery
+                        ,upload = layui.upload;
+                        
+                        //普通图片上传
+                        var uploadInst = upload.render({
+                          elem: '#test2'
+                          ,url: '{:U('Ue/index')}'
+                          ,before: function(obj){
+                            //预读本地文件示例，不支持ie8
+                            obj.preview(function(index, file, result){
+                              $('#demo1').attr('src', result); //图片链接（base64）
+                            });
+                          }
+                          ,done: function(res){
+                            //如果上传失败
+                            if(res.code > 0){
+                              return layer.msg('上传失败');
+                            }
+                            //上传成功
+                            if(res.state == 'SUCCESS')
+                            {
+                              $('#demo1').attr('src', res.url); //图片链接（base64）
+                              $('#demo1').siblings('input:hidden').val(res.url); //图片链接（base64）
+                              _this.$set(_this.savevalue,'photo',res.url)
+                            }
+                          }
+                          ,error: function(){
+                            //演示失败状态，并实现重传
+                            var demoText = $('#demoText');
+                            demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                            demoText.find('.demo-reload').on('click', function(){
+                              uploadInst.upload();
+                            });
+                          }
+                        });
+                      });
+                    }
+                  }
+                })
+              }
+            });
+//             this.$nextTick(function(){
+// //            Vue.set(this, "images", JSON.parse(JSON.stringify(item.images)));
+//               Vue.set(this, "detail", JSON.parse(JSON.stringify(item)));
+// //            Vue.set(this, "sendData", JSON.parse(JSON.stringify(item)));
+//             })
+          },
+          uploadPic: function() {
+            var _this = this
+            if(_this.images.length==9){
+              layer.msg('最多上传9张图片')
+              return
+            }
+            upload_public(function(res, file) { //上传完成时
+              _this.$set(_this.images, _this.images.length, res.link);
+            });
+          },
+          previewimg:function(index,imgs){
+            var len = imgs.length,data=[];
+            for(var i=0;i<len;i++){
+              var obj = {};
+              obj.src = imgs[i];
+              obj.pid = i;
+              data.push(obj)
+            }
+            layer.photos({
+              photos: {
+                  "id": 123, //相册id
+                  "start": index, //初始显示的图片序号，默认0
+                  "data": data
+                }
+              ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+          },
+          personDetail:function(id){
+            sessionStorage.setItem('even_users_evenid',id)
+            layer.open({
+              type: 2,
+              title: '报名人员名单',
+              shadeClose: true,
+              shade: 0.8,
+              area: ['500px', '80%'],
+              content: './even_user.html' //iframe的url
+            }); 
+          },
+          switchHot:function(id,type){
+            var _this = this
+            specialSwitchHot({id:id,type:type}).then(function(res){
+              layer.msg(res.Message)
+              _this.getList()
+            })
+          },
+          switchStatus:function(id,type){
+            var _this = this
+            specialSwitchStatus({id:id,type:type}).then(function(res){
+              layer.msg(res.Message)
+              _this.getList()
+            })
+          },
+          add: function() {
+            this.images = [];
+            this.UE.setContent('');
+            this.sendData = JSON.parse(JSON.stringify(mol_sendData))
+          },
+          del: function() {
+            var _this = this
+            layer.confirm('是否删除此活动？', function(index) {
+              Even_even_del({
+                even_id: _this.detail.EvenId
+              }).then(function(res) {
+                layer.msg(res.Message)
+                layer.close(index)
+                _this.getList()
+              })
+            })
+          },
+          save: function() {
+            var _this = this;
+            var sd ={
+              top:_this.detail.Top,
+              status:_this.detail.Status,
+              even_id:_this.detail.EvenId
+            }
+            this.$nextTick(function(){
+              even_even_save(sd).then(function(res) {
+                layer.msg(res.Message)
+                _this.init()
+              });
+            })
+          }
+        }
+      })
+    </script>
+
+  </body>
+</html>

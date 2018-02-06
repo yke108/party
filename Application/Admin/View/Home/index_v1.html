@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html>
+    <head lang="zh-CN">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>党建天地</title>
+        <meta name="description" content="">
+        <meta http-equiv="Expires" content="0">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Cache-control" content="no-cache">
+        <meta http-equiv="Cache" content="no-cache">
+        <link rel="shortcut icon" href="favicon.ico">
+        <link href="__PUBLIC__/admin/css/bootstrap.min14ed.css?v=3.3.6" rel="stylesheet">
+        <link href="__PUBLIC__/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+        <link href="__PUBLIC__/admin/css/font-awesome.min93e3.css?v=4.4.0" rel="stylesheet">
+        <link href="__PUBLIC__/admin/css/plugins/iCheck/custom.css" rel="stylesheet">
+        <link href="__PUBLIC__/admin/css/animate.min.css" rel="stylesheet">
+        <link href="__PUBLIC__/admin/css/style.min862f.css?v=4.1.0" rel="stylesheet">
+        <link href="__PUBLIC__/layer/layui/css/layui.css" rel="stylesheet">
+      </head>
+<style>
+    [v-cloak]{display:none}
+    .pointer{cursor: pointer;}
+    img{width: 100%;height: auto;vertical-align: middle;}
+    .phone{margin:0 auto;width:320px;-webkit-box-sizing:content-box;box-sizing:content-box;clear:both;}
+    .phone{border:1px #e7e7e7 solid;}
+    .phone iframe{width:100%;display:block;}
+    .phone .statusbar{height:20px;background:url('/public/img/phone_bar_y.png') no-repeat;background-color: #ED3E42;
+	-webkit-background-size:100% auto;background-size:100% auto}
+    .phone .nav{height:38px;line-height: 38px;text-align: center;color:#fff;background-color: #ED3E42;}
+    .right_box_list{position: fixed;top:20px;right: 20px;width: 65%;}
+    .table_img_ad{width: 150px;height: 68px;line-height: 68px;overflow: hidden;}
+
+    .checkbox label{position: relative;}
+    .checkbox label:before{content:'';position:absolute;top:0;bottom:0;left:0;width:20px;}
+    .checkbox label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-24px 0px;}
+    .checkbox label.checked:before{background-position:-48px 0px}
+    .checkbox.private{ margin: 0;margin-left: 10px;}
+    .checkbox.private label{margin-left: 20px;font-size: 16px;}
+
+
+    .radio label{position: relative;}
+    .radio label:before{content:'';position:absolute;top:50%;left:0;width:20px;height: 20px;margin-top: -10px;}
+    .radio label:before{background-image:url(/public/img/green.png);background-repeat:no-repeat;background-position:-144px 0px;}
+    .radio label.checked:before{background-position:-168px 0px}
+    .radio.private{ margin: 0;margin-left: 10px;height:34px;line-height: 34px;}
+    .radio.private label{margin-left: 20px;vertical-align: middle;}
+
+    .btn-tools{position:absolute;top:50%;margin-top:-7px;right:0}
+
+    .category_img{width:100% !important;height:auto !important;vertical-align: middle;border-radius:0 !important;}
+    .client-avatar{width:42px;height:42px;line-height:38px;display:inline-block;border-radius:8px;border:1px solid #f0f0f0;overflow:hidden;text-align:center;background: #fff;}
+
+    .party-item-name{ display: flex; align-items: center;}
+    .party-item-name > img{ vertical-align: middle;}
+    .avatar{ width: 42px; height: 42px; border-radius: 50%;border: solid 1px #F0F0F0; overflow: hidden;}
+    .avatar img{ vertical-align: top;}
+    .name-info{ flex: 1; margin: 0 15px;}
+    .name-info > .text{ font-size: 14px; display: block;}
+    .name-info > p{ display: block; font-size: 12px; color: #878787;margin: 0}
+
+    .table_img_item{width: 42px; height: 42px; overflow: hidden;border-radius: 4px;display: inline-block;text-indent: -999;margin:5px;cursor: pointer;}
+    .table_img_item:nth-child(n + 2){margin-left: 0;}
+</style>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content" id="exapp" v-cloak>
+            <div class="row">
+              <div class="col-sm-4">
+                  <div class="phone">
+                      <div class="statusbar"></div>
+                      <div class="nav">小程序</div>
+                          <iframe id="phone_iframe" src="./index_phone.html" frameborder="0" scrolling="no" name="phoneView"></iframe>
+                    </div>
+                  </div>
+              <div class="col-sm-8">
+                  <div class="ibox float-e-margins white-bg right_box_list">
+                      <div class="ibox-title">
+                        <h5>{{title}}列表</h5>
+                        <div class="ibox-tools">
+                          <button class="btn btn-sm btn-danger btn-tools" type="button" id="btn-submit" @click="add()" v-show="part!=1">选择更多</button>
+                        </div>
+                      </div>
+                      <div class="ibox-content">
+                        <div class="row">
+                        </div>
+                        <div :style="{maxHeight: modelStyle.height_c*0.8+'px',overflowY: 'auto'}" id="mytablebox">
+                          <table class="table table-striped table-hover" id="mytable" v-cloak>
+
+                          </table>
+                          <!-- <div id="pagesaion" v-show="item.list&&item.list.length"></div> -->
+                        </div>
+                      </div>
+                    </div>
+              </div>
+            </div>
+    </div>
+    <script type="text/x-handlebars-template" id="chcekboxbtn">
+    	<!-- <div class="checkbox">
+        <label :class="{checked:opt.istop==1}" @click.stop="switchHot(opt.istop==1?2:1)"></label>
+      </div> -->
+      <div class="checkbtn">
+        <button type="button" class="btn btn-sm btn-outline btn-danger" @click.stop="switchHot(opt.istop==1?2:1)">{{opt.istop==1?'取消':'选取'}}</button>
+      </div>
+    </script>
+    <script type="text/x-handlebars-template" id="previewimg">
+    	<div class="table_img_item"  @click="preview"><img :src="imgurl"/></div>
+    </script>
+    <script type="text/x-handlebars-template" id="tablebar">
+      <div class="ibox-content">
+          <div class="row ">
+              <div class="col-sm-4">
+                <div class="input-group">
+                    <input type="text" name="keyword" v-model="shaiXuan.keyword||shaiXuan.search" placeholder="请输入关键词" class="form-control">
+                    <span class="input-group-btn"><button type="button" class="btn btn-primary" @click="getList()">搜索</button></span>
+                  </div>
+              </div>
+              <div class="col-sm-5">
+                  <!-- <div class="input-group s-b">
+                   <span class="input-group-addon"></span>
+                   <select type="text" class="form-control" v-model="shaiXuan.is_hot||shaiXuan.top">
+                      <option value="">请选择推荐</option>
+                      <option value="1">是</option>
+                      <option value="2">否</option>
+                    </select>
+                </div> -->
+                <div class="radio private" v-if="part==3">
+                  <label :class="{checked:wenzhang==1}" @click.stop="wenzhang=1"> 两学一做</label>
+                  <label :class="{checked:wenzhang==2}" @click.stop="wenzhang=2"> 党建专题</label>
+                </div>
+              </div>
+            </div>
+      </div>
+    </script>
+    <script type="text/x-handlebars-template" id="tableplus">
+      <div id="mytableplusbox" style="padding:15px;padding-top:0;">
+        <table class="table table-striped table-hover" id="mytableplus" v-cloak></table>
+        <div id="pagesaion" v-show="opt.list.length" v-if="opt.list"></div>
+      </div>
+    </script>
+    <script src="__PUBLIC__/admin/js/jquery.min.js?v=2.1.4"></script>
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js?v=3.3.6"></script>
+    <script src="__PUBLIC__/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="__PUBLIC__/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/peity/jquery.peity.min.js"></script>
+    <script src="__PUBLIC__/admin/js/content.min.js?v=1.0.0"></script>
+    <script src="__PUBLIC__/admin/js/demo/peity-demo.min.js"></script>
+    <script src="__PUBLIC__/admin/js/plugins/webuploader/webuploader.min.js"></script>
+    <script src="__PUBLIC__/layer/layui/layui.all.js"></script>
+    <script src="__PUBLIC__/vue/vue.js"></script>
+    <script src="__PUBLIC__/ajaxApi/comm.js"></script>
+    <script src="__PUBLIC__/ajaxApi/index.js"></script>
+    <script src="__PUBLIC__/viewsjs/home_index_v1.js"></script>
+    <script type="text/javascript">
+    var table1,VMW;
+    var VMP = new Vue({
+        el:"#exapp",
+        data:{
+          modelStyle:{
+            width_c:document.documentElement.clientWidth,
+            height_c:document.documentElement.clientHeight
+          },
+          shaiXuan:{
+            keyword:"",
+            status:"",
+            is_hot:"",
+            cat_type:"",
+            page:1,
+            pagesize:8,
+          },
+          part:1,
+          title:'',
+          item:'',
+          windowcheckeList:''
+        },
+        mounted:function(){
+
+        },
+				methods:{
+					trigger_child: function(funName,opt){
+						// 触发子页面VM内方法
+						var sphone = setInterval(function(){
+							if(phoneView.VM){
+                  phoneView.VM[funName](opt);
+									clearInterval(sphone);
+									}
+						},100)
+					},
+					iframeHeight: function(){
+            document.getElementById("phone_iframe").height=0;
+            document.getElementById("phone_iframe").height=document.getElementById("phone_iframe").contentWindow.document.body.scrollHeight;
+          },
+          forTime: function(time){
+            var Time = new Date(Number(time)*1000).format("yyyy-MM-dd");
+            return Time;
+          },
+          getUrlData:function(shaiXuan,check){
+            /* 选择操作返回远程列表数据 */
+            var deff = $.Deferred();
+            var _this = this
+            var optc = {type:Number(this.part),list:[],title:'',count:0,df:'url'}
+            switch(Number(this.part)){
+              case 1:
+              this.shaiXuan = $.extend({search:'',top:'2',page:1,pagesize:8},shaiXuan)
+              return ad_ad_list(this.shaiXuan).then(function(res){
+                _this.windowcheckeList = optc.list = res.List
+                optc.count = Number(res.Count)
+                return deff.resolve(optc)
+              })
+              break
+              case 2:
+              this.shaiXuan = $.extend({search:'',top:'2',page:1,pagesize:8},shaiXuan)
+              return Notice_notice_list(this.shaiXuan).then(function(res){
+                _this.windowcheckeList = optc.list = res.List
+                optc.count = Number(res.Count)
+                return deff.resolve(optc)
+              })
+              break
+              case 3:
+                this.shaiXuan = $.extend({
+                    keyword:"",
+                    status:"1",
+                    is_hot:"2",
+                    cat_type:"2",
+                    home:'1',
+                    page:1,
+                    pagesize:8,
+                  },shaiXuan)
+                if(check==1||!check){
+                  return articleIndex(this.shaiXuan).then(function(res){
+                    $.each(res.List, function(index,item){
+                      item.CatType = 1
+                    })
+                    _this.windowcheckeList = optc.list = res.List
+                    optc.count = Number(res.Count)
+                    return deff.resolve(optc)
+                  })
+                }else if(check==2){
+                  return specialIndex(this.shaiXuan).then(function(res){
+                    $.each(res.List, function(index,item){
+                      item.CatType = 2
+                    })
+                    _this.windowcheckeList = optc.list = res.List
+                    optc.count = Number(res.Count)
+                    return deff.resolve(optc)
+                  })
+                }
+              break
+              case 4:
+              this.shaiXuan = $.extend({search:'',top:'2',page:1,pagesize:8},shaiXuan)
+              return mien_mien_list(this.shaiXuan).then(function(res){
+                _this.windowcheckeList = optc.list = res.List
+                optc.count = Number(res.Count)
+                return deff.resolve(optc)
+              })
+              break
+              case 5:
+              this.shaiXuan = $.extend({search:'',top:'2',page:1,pagesize:8},shaiXuan)
+              return even_even_list(this.shaiXuan).then(function(res){
+                _this.windowcheckeList = optc.list = res.List
+                optc.count = Number(res.Count)
+                return deff.resolve(optc)
+              })
+              break
+            }
+          },
+          add: function(){
+            /* 选择操作 */
+            var _this = this;
+            this.getUrlData().then(function(optc){
+              _this.ShowUrlTable(optc)
+            })
+          },
+          previewimg:function(index,imgs){
+            var len = imgs.length,data=[];
+            for(var i=0;i<len;i++){
+              var obj = {};
+              obj.src = imgs[i];
+              obj.pid = i;
+              data.push(obj)
+            }
+            layer.photos({
+              photos: {
+                  "id": 123, //相册id
+                  "start": index, //初始显示的图片序号，默认0
+                  "data": data
+                }
+              ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机（请注意，3.0之前的版本用shift参数）
+            });
+          },
+          ShowTable: function(item){
+            /* 接收子页面来的数据 */
+            this.title = item.title;
+            this.part = item.type;
+            this.item = item;
+            this.initTableData(item);
+          },
+          ShowUrlTable:function(opt){
+            var _this = this;
+            var ct = '<div id="layerPage">'+$('#tablebar').html()+'<tableplus :opt="opt"></tableplus></div>';
+            layer.open({
+              id:"mytablepluswindow",
+              type:1,
+              title:'',
+              btn:false,
+              closeBtn:1,
+              area:['80%','90%'],
+              content:ct,
+              success: function(elm,index){
+                VMW = new Vue({
+                  el:'#layerPage',
+                  data:{
+                    opt: opt,
+                    shaiXuan: _this.shaiXuan,
+                    wenzhang:1,
+                    part: _this.part,
+                  },
+                  watch:{
+                    wenzhang: function(){
+                      var _this = this
+                      this.$nextTick(function(){
+                        _this.getList(_this.shaiXuan);
+                      })
+                    }
+                  },
+                  methods:{
+                    getList: function(shaiXuan){
+                      var def = $.Deferred();
+                      var _this_child_1 = this;
+                      if(shaiXuan){
+                        /* 分页 */
+                        _this_child_1.shaiXuan = shaiXuan
+                      }else{
+                        /* 搜索 */
+                        _this_child_1.shaiXuan.page = 1
+                      }
+                      var check = this.wenzhang
+                      return _this.getUrlData(_this_child_1.shaiXuan,check).then(function(optc){
+                        Vue.set(_this_child_1,'opt',optc);//分页是否显示需要的数据
+                        _this.initTableData(optc,true);//表格需要的数据
+                        _this.pagesion(optc);//分页创建
+                        return def.resolve();
+                      })
+                    }
+                  },
+                  mounted: function(){
+                    _this.initTableData(opt,true);
+                    _this.pagesion(opt);
+                  }
+                });
+              }
+            });
+          },
+          pagesion: function(opt){
+            /* 生成分页 */
+            var _this = this
+            layui.use('laypage', function(){
+              var laypage = layui.laypage;
+              //执行一个laypage实例
+              laypage.render({
+                elem: 'pagesaion' //注意，这里的 test1 是 ID，不用加 # 号
+                ,layout: ['count', 'prev', 'page', 'next', 'skip']
+                ,count: opt.count //数据总数，从服务端得到
+                ,limit:_this.shaiXuan.pagesize
+                ,curr:_this.shaiXuan.page
+                ,jump: function(obj, first){
+                  if(!first){
+                    _this.shaiXuan.page = obj.curr;
+                    VMW.getList(_this.shaiXuan);
+                  }
+                }
+              });
+            });
+          },
+          initTableData: function(opt,isWindow){
+          /* 处理子页面来的数据 */
+            var obj = {col:[],data:[],type:Number(opt.type)}
+            switch(Number(opt.type)){
+              case 1:
+              obj['col'] = [{field:'AdTitle',title:'广告标题'},{field:'Picture',title:'广告图片',formatter:this.formatImg}]
+              break;
+              case 2:
+              obj['col'] = [{field:'Title',title:'公告标题'},{field:'Addtime',title:'添加日期',formatter:this.formatTime}]
+              break;
+              case 3:
+              obj['col'] = [{field:'Images',title:'',formatter:this.formatImgAvatar,width:42},{field:'Title',title:'文章'},{field:'Sort',title:'排序值'},{field:'ShowTime',title:'添加日期',formatter:this.formatTime}]
+              if(opt.df){
+                obj['col'] = [{field:'images',title:'',formatter:this.formatImgAvatar,width:42},{field:'title',title:'文章'},{field:'sort',title:'排序值'},{field:'add_time',title:'添加日期',formatter:this.formatTime}]
+              }
+              break;
+              case 4:
+              obj['col'] = [{title:'党员',formatter:this.formatUser,width:150},{field:'Content',title:'文字'},{title:'图片',formatter:this.formatImages}]
+              break;
+              case 5:
+              obj['col'] = [{field:'Photo',title:'图片',formatter:this.formatImg2},{field:'Title',title:'标题'},{field:'StartTime',title:'活动时间'},{field:'Location',title:'活动地点'}]
+              break;
+            }
+            obj['data'] = opt.list;
+            if(isWindow){
+              this.createTable(obj,'mytableplus','mytableplusbox');
+            }else{
+              this.createTable(obj,'mytable','mytablebox');
+            }
+          },
+          formatImg: function(value,row,index){
+           /* 生成有图片的单元格 */
+           var opt = {index:0,imgs:[value]}
+           var opts = JSON.stringify(opt)
+           var html = '<div class="table_img_ad pointer" style="background:url('+value+') no-repeat center center;background-size:100% auto;" @click=previewimg('+opts+')></div>'
+           return html
+          },
+          formatImg2: function(value,row,index){
+           /* 生成有图片的单元格 */
+           var opt = {index:0,imgs:[value]}
+           var opts = JSON.stringify(opt)
+           var html = '<div class="table_img_ad pointer" style="background:url('+value+') no-repeat center center;background-size:100% auto;" @click=previewimg('+opts+')></div>'
+           return html
+          },
+          formatImages: function(value,row,index){
+            /* 生成多张图片 */
+            var html = [];
+            var arr = JSON.stringify(row.Photo);
+            $.each(row.SmallPhoto, function(i,item){
+              html.push('<previewimg imgurl='+item+' imgarr='+arr+' index='+i+' @success="previewimg"></previewimg>')
+            })
+            return html.join('')
+          },
+          formatImgAvatar: function(value,row,index){
+           /* 生成有图片的单元格 */
+           var opt = {index:0,imgs:[value[0]]}
+           var opts = JSON.stringify(opt)
+           var html = '<div class="client-avatar" @click=previewimg('+opts+')>\
+                          <img alt="图片" src='+value[0]+' class="category_img pointer" v-if="'+value.length+'"/>\
+                          <img class="category_img" src="/public/img/default.svg" v-else/>\
+                        </div>'
+           return html
+          },
+          formatBtn: function(value,row,index){
+            var html = '<chcekboxbtn :opt="opt['+index+']" @success="success"></chcekboxbtn>'
+           return html
+          },
+          formatUser: function(value,row,index){
+            var html = '<div class="party-item-name">\
+                    <div class="avatar">\
+                      <img src="'+row.User.UserImg+'"></img>\
+                    </div>\
+                    <div class="name-info">\
+                      <span class="text">'+row.User.RealName+'</span>\
+                      <p>'+row.User.Sex+' '+row.User.Age+'岁</p>\
+                    </div>\
+                  </div>'
+                  return html
+          },
+          formatTime: function(value,row,index){
+          return new Date(Number(value)*1000).format('yyyy-MM-dd hh:mm')
+          },
+          createTable: function(opt,tableId,tablebox){
+            opt.col.push({title:"",formatter:this.formatBtn,align:'center'})
+          /* 生成表格 */
+            var _this = this
+            var html = '<table class="table table-striped table-hover" id="'+tableId+'"></table>'
+            $('#'+tableId).remove();
+            $('#'+tablebox).prepend(html);
+            $('#'+tableId).bootstrapTable('destroy');
+            $('#'+tableId).bootstrapTable({
+              classes:'table-no-bordered',
+              columns: opt.col,
+              data: opt.data,
+              onPostBody: function(){
+                 new Vue(vueexdata('#'+tableId,opt.data))
+              }
+            });
+          }
+				}
+    })
+    /* 表格的vue数据 */
+    function vueexdata(el,tdata){
+      var ntdata = [];
+      var top = 1
+      $.each(tdata,function(index,row){
+        var topt = {
+          id:row.AdId||row.EvenId||row.MienId||row.Id||row.NoticeId||row.id,
+          part:VMP.part,
+          index:index,
+          ct:row.CatType,
+          istop:row.Top||row.is_hot||top
+        };
+        ntdata.push(topt);
+      });
+      return table1 = {
+        el:el,
+        data:{
+          opt:ntdata
+        },
+        methods:{
+          cb: function(res,optf){
+            layer.msg(res.Message);
+            Vue.set(this.opt[Number(optf.index)],'istop',optf.value);//改变勾选状态
+            VMP.trigger_child('getData',optf.part);
+          },
+          previewimg:function(opt){
+            if(typeof opt==='string'){
+              opt = JSON.parse(opt)
+            }
+            VMP.previewimg(opt.index,opt.imgs);
+          },
+          success: function(opt){
+            /* checkbox选择后 */
+            var _this = this
+            switch(Number(opt.part)){
+              case 1:
+              ad_ad_change({type:'status',id:opt.id}).then(function(res){
+                _this.cb(res,opt)
+              })
+              break;
+              case 2:
+              notice_notice_change({type:'top',notice_id:opt.id}).then(function(res){
+                _this.cb(res,opt)
+              })
+              break;
+              case 3:
+              if(opt.ct==1){
+                articleSwitchHot({id:opt.id}).then(function(res){
+                  _this.cb(res,opt)
+                })
+              }else {
+                specialSwitchHot({id:opt.id}).then(function(res){
+                  _this.cb(res,opt)
+                })
+              }
+              break;
+              case 4:
+                mien_mien_change({type:'top',mien_id:opt.id}).then(function(res){
+                  _this.cb(res,opt)
+                })
+              break;
+              case 5:
+                even_even_change({type:'top',even_id:opt.id}).then(function(res){
+                  _this.cb(res,opt)
+                })
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    </script>
+</body>
+</html>
