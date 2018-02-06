@@ -1,0 +1,12 @@
+.project
+.well-known/
+config.db.php
+config.*.php
+Runtime/
+*.swp
+Site/upload/
+
+.settings/
+
+.buildpath
+.idea
